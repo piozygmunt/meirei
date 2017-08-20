@@ -6,5 +6,5 @@ buildscript {
 dependencies {
     compile project(":meirei-core")
     testCompile "ch.qos.logback:logback-classic:$logback_version"
-    compile "net.dv8tion:JDA:$jda_version"
+    compileOnly "net.dv8tion:JDA:$jda_version"
 }
