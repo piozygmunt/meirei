@@ -1,0 +1,11 @@
+buildscript {
+    ext.slf4j_version = '1.7.25'
+    ext.bucket4j_version = '2.1.0'
+    ext.caffeine_version = '2.5.5'
+}
+
+dependencies {
+    compile "org.slf4j:slf4j-api:$slf4j_version"
+    compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
+    compile "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+}

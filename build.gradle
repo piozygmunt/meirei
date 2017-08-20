@@ -1,0 +1,67 @@
+buildscript {
+    ext.kotlin_version = '1.1.4-2'
+    ext.dokka_version = '0.9.15'
+    ext.shadow_version = '1.2.4'
+    ext.junit_version = '4.12'
+    ext.spotless_version = '3.5.1'
+
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath "com.github.jengelman.gradle.plugins:shadow:$shadow_version"
+        classpath "com.diffplug.spotless:spotless-plugin-gradle:$spotless_version"
+    }
+}
+
+allprojects {
+    group 'com.github.kvnxiao'
+    version '1.0-SNAPSHOT'
+
+    task wrapper(type: Wrapper) {
+        gradleVersion = '4.1'
+        distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+    }
+}
+
+subprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+    }
+
+    apply plugin: 'java'
+    apply plugin: 'kotlin'
+    apply plugin: 'org.jetbrains.dokka'
+    apply plugin: 'com.github.johnrengelman.shadow'
+    apply plugin: "com.diffplug.gradle.spotless"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    dependencies {
+        compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        testCompile "junit:junit:$junit_version"
+    }
+
+    compileKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+    compileTestKotlin {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+
+    spotless {
+        java {
+            licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
+        }
+        kotlin {
+            ktlint()
+            licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
+        }
+    }
+}

@@ -1,0 +1,8 @@
+buildscript {
+    ext.jda_version = "3.2.0_242"
+}
+
+dependencies {
+    compile project(":meirei-core")
+    compile "net.dv8tion:JDA:$jda_version"
+}
