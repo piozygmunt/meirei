@@ -4,6 +4,7 @@ buildscript {
     ext.shadow_version = '1.2.4'
     ext.junit_version = '4.12'
     ext.spotless_version = '3.5.1'
+    ext.slf4j_version = '1.7.25'
 
     repositories {
         jcenter()
@@ -45,6 +46,8 @@ subprojects {
     dependencies {
         compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+        compile "org.slf4j:slf4j-api:$slf4j_version"
+        testCompile "org.slf4j:slf4j-api:$slf4j_version"
         testCompile "junit:junit:$junit_version"
     }
 

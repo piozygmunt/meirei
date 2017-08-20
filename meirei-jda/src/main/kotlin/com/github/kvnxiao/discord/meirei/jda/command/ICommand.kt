@@ -84,7 +84,7 @@ abstract class ICommand(
 
     fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
         if (event.isFromType(ChannelType.PRIVATE)) {
-            event.channel.sendMessage("Slow down, you're trying to execute the '${context.alias}' command too fast.").queue()
+            event.channel.sendMessage("Slow down, you're trying to execute the '${context.alias}' command too fast here.").queue()
         } else {
             event.author.openPrivateChannel().queue {
                 it.sendMessage("Slow down there, you're trying to execute the '${context.alias}' command too fast in **${event.guild.name} : ${event.channel.name}**.").queue()
