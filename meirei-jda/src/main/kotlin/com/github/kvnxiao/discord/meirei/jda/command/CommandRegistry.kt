@@ -40,7 +40,7 @@ class CommandRegistry : ICommandRegistry {
         // Insert command into unique commands map
         uniqueNameMap.put(command.properties.uniqueName, command)
 
-        Meirei.LOGGER.debug("Registered command '$command' with prefix '${command.properties.prefix}'")
+        Meirei.LOGGER.debug("Registered command '$command': prefix '${command.properties.prefix}', aliases '${command.properties.aliases}'")
         return true
     }
 

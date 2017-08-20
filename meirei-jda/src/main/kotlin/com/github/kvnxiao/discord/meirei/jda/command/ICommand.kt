@@ -41,7 +41,7 @@ abstract class ICommand(
             this.subCommandMap.put(it, subCommand)
         }
         subCommands.add(subCommand)
-        Meirei.LOGGER.debug("Linked sub-command '${subCommand.properties.uniqueName}' with aliases '${subCommand.properties.aliases}' to '${this.properties.uniqueName}'")
+        Meirei.LOGGER.debug("Linked sub-command '${subCommand.properties.uniqueName}' to parent '${this.properties.uniqueName}': prefix '${subCommand.properties.prefix}', aliases '${subCommand.properties.aliases}'")
         return this
     }
 

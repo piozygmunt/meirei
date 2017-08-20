@@ -26,6 +26,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.reflect.KClass
 
 class CommandListener : ListenerAdapter() {
 
@@ -98,6 +99,8 @@ class CommandListener : ListenerAdapter() {
     }
 
     fun addAnnotatedCommands(clazz: Class<*>): Boolean = this.addAnnotatedCommands(clazz.newInstance())
+
+    fun addAnnotatedCommands(ktClass: KClass<*>): Boolean = this.addAnnotatedCommands(ktClass.java.newInstance())
 
     fun loadExternalCommands(): Boolean {
         val (commands, containers) = extLoader.loadExternalCommands()

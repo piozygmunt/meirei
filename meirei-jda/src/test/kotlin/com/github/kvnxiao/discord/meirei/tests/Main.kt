@@ -62,6 +62,7 @@ fun main(args: Array<String>) {
             event.textChannel.sendMessage("ok").queue()
         }
     }))
+    commandListener.addAnnotatedCommands(AnnotatedCommand::class)
     builder.addEventListener(commandListener)
 
     val client = builder.buildBlocking()
