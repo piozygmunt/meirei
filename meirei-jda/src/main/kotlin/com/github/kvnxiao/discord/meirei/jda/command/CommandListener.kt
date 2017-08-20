@@ -16,19 +16,23 @@
 package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
+import com.github.kvnxiao.discord.meirei.jda.external.ExternalCommandLoader
 import com.github.kvnxiao.discord.meirei.utility.SplitString
 import com.github.kvnxiao.discord.meirei.utility.ThreadFactory
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import java.lang.reflect.InvocationTargetException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class CommandListener : ListenerAdapter() {
 
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty("nthreads")?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, ThreadFactory())
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, ThreadFactory())
     private val executor: CommandExecutor = CommandExecutor()
+    private val extLoader: ExternalCommandLoader = ExternalCommandLoader()
+    private val parser: ICommandParser = CommandParser()
     val registry: ICommandRegistry = CommandRegistry()
 
     companion object {
@@ -74,6 +78,35 @@ class CommandListener : ListenerAdapter() {
 
     fun setOwner(ownerId: Long) {
         executor.ownerId = ownerId
+    }
+
+    private fun addAnnotatedCommands(instance: Any): Boolean {
+        try {
+            val commandList = parser.parseAnnotations(instance)
+            if (commandList.isEmpty()) return false
+            commandList.forEach {
+                registry.addCommand(it)
+            }
+            return true
+        } catch (e: InvocationTargetException) {
+            Meirei.LOGGER.error("${e.localizedMessage}: Failed to instantiate an object instance of class ${instance::class.java.name}")
+            return false
+        } catch (e: IllegalAccessException) {
+            Meirei.LOGGER.error("${e.localizedMessage}: Failed to access method definition in class ${instance::class.java.name}")
+            return false
+        }
+    }
+
+    fun addAnnotatedCommands(clazz: Class<*>): Boolean = this.addAnnotatedCommands(clazz.newInstance())
+
+    fun loadExternalCommands(): Boolean {
+        val (commands, containers) = extLoader.loadExternalCommands()
+        if (commands.isEmpty() && containers.isEmpty()) {
+            return false
+        }
+        commands.forEach { registry.addCommand(it) }
+        containers.forEach { this.addAnnotatedCommands(it) }
+        return true
     }
 
 }

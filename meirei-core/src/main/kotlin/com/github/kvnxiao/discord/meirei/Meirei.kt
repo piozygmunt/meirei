@@ -20,4 +20,6 @@ import org.slf4j.LoggerFactory
 
 object Meirei {
     val LOGGER: Logger = LoggerFactory.getLogger(Meirei::class.java)
+    val DEFAULT_JAR_ENV_NAME = "jarfolder"
+    val DEFAULT_THREAD_ENV_NAME = "nthreads"
 }

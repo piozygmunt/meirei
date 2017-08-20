@@ -17,7 +17,7 @@ package com.github.kvnxiao.discord.meirei.permission
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class PermissionSetting(
+annotation class Permissions(
     /**
      * @see[PermissionDefaults.REQUIRE_MENTION]
      */
@@ -45,5 +45,9 @@ annotation class PermissionSetting(
     /**
      * see[PermissionDefaults.RATE_LIMIT_ON_GUILD]
      */
-    val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD
+    val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD,
+
+    val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER,
+
+    val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER
 )

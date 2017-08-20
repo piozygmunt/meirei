@@ -22,5 +22,7 @@ data class PermissionData(
     val removeCallMsg: Boolean = PermissionDefaults.REMOVE_CALL_MSG,
     val rateLimitPeriodInMs: Long = PermissionDefaults.RATE_LIMIT_PERIOD_MS,
     val tokensPerPeriod: Long = PermissionDefaults.TOKENS_PER_PERIOD,
-    val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD
+    val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD,
+    val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER,
+    val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER
 )

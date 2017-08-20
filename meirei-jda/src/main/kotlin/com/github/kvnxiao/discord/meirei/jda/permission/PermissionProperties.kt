@@ -16,13 +16,10 @@
 package com.github.kvnxiao.discord.meirei.jda.permission
 
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.permission.PermissionDefaults
 import net.dv8tion.jda.core.Permission
 import java.util.EnumSet
 
 data class PermissionProperties(
     val props: PermissionData = PermissionData(),
-    val level: EnumSet<Permission> = LevelDefaults.DEFAULT_PERMS_RW,
-    val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER,
-    val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER
+    val level: EnumSet<Permission> = LevelDefaults.DEFAULT_PERMS_RW
 )
