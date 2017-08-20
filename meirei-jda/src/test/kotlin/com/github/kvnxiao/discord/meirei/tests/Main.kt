@@ -47,9 +47,21 @@ fun main(args: Array<String>) {
         )
     ) {
         override fun executeWith(context: CommandContext, event: MessageReceivedEvent) {
-            event.channel.sendMessage("pong!").queue()
+            event.textChannel.sendMessage("pong!").queue()
         }
-    })
+    }.addSubCommand(object : ICommand(
+        properties = CommandProperties(
+            uniqueName = "pong",
+            aliases = setOf("pong", "pon")
+        ),
+        permissions = PermissionProperties(
+            props = PermissionData()
+        )
+    ) {
+        override fun executeWith(context: CommandContext, event: MessageReceivedEvent) {
+            event.textChannel.sendMessage("ok").queue()
+        }
+    }))
     builder.addEventListener(commandListener)
 
     val client = builder.buildBlocking()

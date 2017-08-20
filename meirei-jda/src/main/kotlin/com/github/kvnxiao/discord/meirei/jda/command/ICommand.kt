@@ -32,16 +32,21 @@ abstract class ICommand(
     val subCommands: MutableSet<ICommand> = mutableSetOf()
 
     fun addSubCommand(subCommand: ICommand): ICommand {
+        if (!validateAliases(subCommand.properties.aliases)) {
+            Meirei.LOGGER.error("Failed to link sub-command '${subCommand.properties.uniqueName}' to '${this.properties.uniqueName}' due to aliases already existing")
+            return this
+        }
+
         subCommand.properties.aliases.forEach {
-            if (subCommandMap.containsKey(it)) {
-                Meirei.LOGGER.error("Failed to link sub-command '${subCommand.properties.uniqueName}' to '${this.properties.uniqueName}' as the alias '$it' is already taken!")
-                return@forEach
-            } else {
-                this.subCommandMap.put(it, subCommand)
-            }
+            this.subCommandMap.put(it, subCommand)
         }
         subCommands.add(subCommand)
+        Meirei.LOGGER.debug("Linked sub-command '${subCommand.properties.uniqueName}' with aliases '${subCommand.properties.aliases}' to '${this.properties.uniqueName}'")
         return this
+    }
+
+    private fun validateAliases(aliases: Set<String>): Boolean {
+        return aliases.none { subCommandMap.containsKey(it) }
     }
 
     fun hasSubCommands(): Boolean = subCommands.isNotEmpty()

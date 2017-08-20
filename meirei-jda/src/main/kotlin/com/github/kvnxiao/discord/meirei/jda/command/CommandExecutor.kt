@@ -67,13 +67,10 @@ class CommandExecutor {
 
         // Validate mention-only command
         if (!validateMentionOnly(command, hasBotMention)) return false
-        println("mentions valid")
         // Validate permissions
         if (!validatePermissions(command, context, event, isPrivate)) return false
-        println("permissions valid")
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
-        println("rate limits valid")
 
         command.executeWith(context, event)
         return true
