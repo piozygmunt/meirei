@@ -50,3 +50,5 @@ modules/
 /kommandant-configurable/kommandant
 kommandant.json
 config
+
+token.txt

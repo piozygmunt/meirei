@@ -24,10 +24,14 @@ import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 
 fun main(args: Array<String>) {
+    val token = String(Files.readAllBytes(Paths.get("token.txt")), StandardCharsets.UTF_8)
     val builder = JDABuilder(AccountType.BOT)
-        .setToken("MjcyMTc3MTQyNTUxNTQzODA4.DHf9hg.BvhDTGixfVCaBJK4Y9rC-PUrShg")
+        .setToken(token)
 
     // Add command listener with application owner information
     val commandListener = CommandListener()
