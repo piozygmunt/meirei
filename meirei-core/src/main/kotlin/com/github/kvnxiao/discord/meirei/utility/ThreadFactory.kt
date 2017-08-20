@@ -32,7 +32,7 @@ class ThreadFactory : ThreadFactory {
             s.threadGroup
         else
             Thread.currentThread().threadGroup
-        namePrefix = "CmdExec pool-${poolNumber.getAndIncrement()}-thread-"
+        namePrefix = "MeireiExec pool-${poolNumber.getAndIncrement()}-thread-"
     }
 
     override fun newThread(r: Runnable): Thread {
