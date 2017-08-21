@@ -54,7 +54,11 @@ object CommandRegistry : ICommandRegistry {
     }
 
     override fun getAllCommands(): List<ICommand> {
-        return uniqueNameMap.values.toList()
+        return uniqueNameMap.values.sortedBy { it.properties.uniqueName }.toList()
+    }
+
+    override fun getAllCommandAliases(): List<String> {
+        return aliasMap.keys.sorted().toList()
     }
 
     override fun enableCommand() {

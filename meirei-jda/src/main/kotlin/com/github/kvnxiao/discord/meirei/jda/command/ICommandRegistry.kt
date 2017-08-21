@@ -25,6 +25,8 @@ interface ICommandRegistry {
 
     fun getAllCommands(): List<ICommand>
 
+    fun getAllCommandAliases(): List<String>
+
     fun enableCommand()
 
     fun disableCommand()
