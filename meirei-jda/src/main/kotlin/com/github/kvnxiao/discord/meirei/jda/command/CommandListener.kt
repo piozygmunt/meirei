@@ -101,9 +101,9 @@ class CommandListener : ListenerAdapter() {
         commands.forEach { registry.addCommand(it) }
     }
 
-    fun addAnnotatedCommands(clazz: Class<*>): Boolean = this.addAnnotatedCommands(clazz.newInstance())
+    fun addAnnotatedCommands(vararg classes: Class<*>) = classes.forEach { this.addAnnotatedCommands(it.newInstance()) }
 
-    fun addAnnotatedCommands(ktClass: KClass<*>): Boolean = this.addAnnotatedCommands(ktClass.java.newInstance())
+    fun addAnnotatedCommands(vararg ktClasses: KClass<*>) = ktClasses.forEach { this.addAnnotatedCommands(it.java.newInstance()) }
 
     fun loadExternalCommands(): Boolean {
         val (commands, containers) = extLoader.loadExternalCommands()
