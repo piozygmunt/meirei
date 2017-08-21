@@ -28,13 +28,13 @@ class RateLimitManager {
 
     // Map of user id to bucket
     val userManager: Cache<Long, Bucket> = Caffeine.newBuilder()
-        .expireAfterAccess(10, TimeUnit.MINUTES)
-        .expireAfterWrite(10, TimeUnit.MINUTES)
+        .expireAfterAccess(3, TimeUnit.MINUTES)
+        .expireAfterWrite(3, TimeUnit.MINUTES)
         .build()
 
     val guildManager: Cache<Long, Bucket> = Caffeine.newBuilder()
-        .expireAfterAccess(1, TimeUnit.HOURS)
-        .expireAfterWrite(1, TimeUnit.HOURS)
+        .expireAfterAccess(5, TimeUnit.MINUTES)
+        .expireAfterWrite(5, TimeUnit.MINUTES)
         .build()
 
     fun Cache<Long, Bucket>.getOrCreateBucket(id: Long, perms: PermissionData, isGuildLevel: Boolean): Bucket {
