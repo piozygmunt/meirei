@@ -53,6 +53,10 @@ object CommandRegistry : ICommandRegistry {
         return if (uniqueName != null) uniqueNameMap[uniqueName] else null
     }
 
+    override fun getAllCommands(): List<ICommand> {
+        return uniqueNameMap.values.toList()
+    }
+
     override fun enableCommand() {
         TODO("enable command")
     }

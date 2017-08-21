@@ -23,6 +23,8 @@ interface ICommandRegistry {
 
     fun getCommandByAlias(alias: String): ICommand?
 
+    fun getAllCommands(): List<ICommand>
+
     fun enableCommand()
 
     fun disableCommand()
