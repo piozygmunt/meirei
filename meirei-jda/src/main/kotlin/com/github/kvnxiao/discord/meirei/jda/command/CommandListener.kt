@@ -95,6 +95,10 @@ object CommandListener : ListenerAdapter() {
         }
     }
 
+    fun addCommands(vararg commands: ICommand) {
+        commands.forEach { registry.addCommand(it) }
+    }
+
     fun addAnnotatedCommands(clazz: Class<*>): Boolean = this.addAnnotatedCommands(clazz.newInstance())
 
     fun addAnnotatedCommands(ktClass: KClass<*>): Boolean = this.addAnnotatedCommands(ktClass.java.newInstance())
