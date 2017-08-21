@@ -38,9 +38,8 @@ class CommandExecutor {
                             return executeWithSubCommand(command, context, it, subAlias, subArgs, event, isPrivate, hasBotMention)
                         }
                     }
-                } else {
-                    return executeCommand(command, context, event, isPrivate, hasBotMention)
                 }
+                return executeCommand(command, context, event, isPrivate, hasBotMention)
             } catch (e: InvocationTargetException) {
                 Meirei.LOGGER.error("${e.localizedMessage}: Failed to invoke method bound to command '$command'!")
             } catch (e: IllegalAccessException) {
