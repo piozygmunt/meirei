@@ -20,7 +20,7 @@ buildscript {
 
 allprojects {
     group 'com.github.kvnxiao'
-    version '1.0-SNAPSHOT'
+    version '1.0.0-SNAPSHOT'
 
     task wrapper(type: Wrapper) {
         gradleVersion = '4.1'
