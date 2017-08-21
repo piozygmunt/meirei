@@ -63,8 +63,6 @@ class CommandExecutor {
     }
 
     private fun executeCommand(command: ICommand, context: CommandContext, event: MessageReceivedEvent, isPrivate: Boolean, hasBotMention: Boolean): Boolean {
-        println("Attempting to execute command $command")
-
         // Validate mention-only command
         if (!validateMentionOnly(command, hasBotMention)) return false
         // Validate permissions
@@ -72,6 +70,7 @@ class CommandExecutor {
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
+        Meirei.LOGGER.debug("Executing command '${command.properties.uniqueName}' for user ${event.author}")
         command.executeWith(context, event)
         return true
     }

@@ -51,8 +51,6 @@ object CommandListener : ListenerAdapter() {
                 val hasBotMention = hasBotMention(it, message)
                 val content = if (hasBotMention) secondStr else rawContent
                 content?.let {
-                    // Process command message
-                    Meirei.LOGGER.debug("Processing command: $it")
                     process(content, event, isPrivate, hasBotMention)
                 }
             }
@@ -65,6 +63,7 @@ object CommandListener : ListenerAdapter() {
         alias?.let {
             val command: ICommand? = registry.getCommandByAlias(it)
             command?.let {
+                Meirei.LOGGER.debug("Processing command: $it")
                 executor.execute(it, CommandContext(alias, args, it), event, isPrivate, hasBotMention)
             }
         }
