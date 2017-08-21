@@ -28,15 +28,17 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.reflect.KClass
 
-object CommandListener : ListenerAdapter() {
+class CommandListener : ListenerAdapter() {
 
-    private const val DEFAULT_THREAD_COUNT = 2
+    companion object {
+        const val DEFAULT_THREAD_COUNT = 2
+    }
 
     private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, ThreadFactory())
     private val executor: CommandExecutor = CommandExecutor()
     private val extLoader: ExternalCommandLoader = ExternalCommandLoader()
     private val parser: ICommandParser = CommandParser()
-    val registry: ICommandRegistry = CommandRegistry()
+    val registry: ICommandRegistry = CommandRegistry
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         threadPool.submit {

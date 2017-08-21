@@ -17,7 +17,7 @@ package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
 
-class CommandRegistry : ICommandRegistry {
+object CommandRegistry : ICommandRegistry {
 
     private val uniqueNameMap: MutableMap<String, ICommand> = mutableMapOf()
     private val aliasMap: MutableMap<String, String> = mutableMapOf()
