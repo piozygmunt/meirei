@@ -45,7 +45,7 @@ class CommandRegistry : ICommandRegistry {
     }
 
     override fun deleteCommand(command: ICommand): Boolean {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("delete command")
     }
 
     override fun getCommandByAlias(alias: String): ICommand? {
@@ -54,11 +54,11 @@ class CommandRegistry : ICommandRegistry {
     }
 
     override fun enableCommand() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("enable command")
     }
 
     override fun disableCommand() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("disable command")
     }
 
     override fun isAliasExist(input: String): Boolean {
