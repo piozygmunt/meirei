@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
         .setToken(token)
 
     // Add command listener with application owner information
-    val commandListener = CommandListener()
+    val commandListener = CommandListener
     commandListener.registry.addCommand(object : ICommand(
         properties = CommandProperties(
             uniqueName = "ping",
