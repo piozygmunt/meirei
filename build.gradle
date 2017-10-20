@@ -1,9 +1,9 @@
 buildscript {
-    ext.kotlin_version = '1.1.4-2'
+    ext.kotlin_version = '1.1.51'
     ext.dokka_version = '0.9.15'
     ext.shadow_version = '1.2.4'
     ext.junit_version = '4.12'
-    ext.spotless_version = '3.5.1'
+    ext.spotless_version = '3.6.0'
     ext.slf4j_version = '1.7.25'
 
     repositories {
@@ -23,7 +23,7 @@ allprojects {
     version '1.0.0-SNAPSHOT'
 
     task wrapper(type: Wrapper) {
-        gradleVersion = '4.1'
+        gradleVersion = '4.2.1'
         distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
     }
 }
