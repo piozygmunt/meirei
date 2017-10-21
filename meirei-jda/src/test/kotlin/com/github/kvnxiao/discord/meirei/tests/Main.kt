@@ -29,7 +29,8 @@ import java.nio.file.Files
 import java.nio.file.Paths
 
 fun main(args: Array<String>) {
-    val token = String(Files.readAllBytes(Paths.get("token.txt")), StandardCharsets.UTF_8)
+    val token = System.getenv("TEST_BOT_TOKEN")
+    requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
     val builder = JDABuilder(AccountType.BOT)
         .setToken(token)
 

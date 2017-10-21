@@ -116,15 +116,21 @@ class CommandExecutor {
         val userPerms = event.member.getPermissions(event.textChannel)
         requiredPerms.removeAll(userPerms)
 
-        val hasUserPerms = requiredPerms.isEmpty()
+        var hasUserPerms = requiredPerms.isEmpty()
 
-        if (isGuildOwner || isBotOwner || hasUserPerms) {
-            return true
+        // Check if guild owner
+        hasUserPerms = hasUserPerms && (!command.permissions.props.reqGuildOwner || isGuildOwner)
+
+        // Check if bot owner
+        hasUserPerms = hasUserPerms && (!command.permissions.props.reqBotOwner || isBotOwner)
+
+        return if (hasUserPerms) {
+            true
+        } else {
+            Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.uniqueName}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
+            command.onMissingPerms(context, event)
+            false
         }
-
-        Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.uniqueName}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
-        command.onMissingPerms(context, event)
-        return false
     }
 
 }

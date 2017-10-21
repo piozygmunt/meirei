@@ -17,6 +17,7 @@ package com.github.kvnxiao.discord.meirei.tests
 
 import com.github.kvnxiao.discord.meirei.command.Command
 import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
+import com.github.kvnxiao.discord.meirei.permission.Permissions
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 class AnnotatedCommand {
@@ -37,6 +38,26 @@ class AnnotatedCommand {
     )
     fun childCommand(context: CommandContext, event: MessageReceivedEvent) {
         event.textChannel.sendMessage("child command works!").queue()
+    }
+
+    @Command(
+        prefix = "/",
+        uniqueName = "owner",
+        aliases = arrayOf("owner")
+    )
+    @Permissions(reqBotOwner = true)
+    fun botOwner(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendMessage("This command can only be called by the bot owner.").queue()
+    }
+
+    @Command(
+        prefix = "/",
+        uniqueName = "guild",
+        aliases = arrayOf("guild")
+    )
+    @Permissions(reqGuildOwner = true)
+    fun guildOnly(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendMessage("This command can only be called by the guild owner.").queue()
     }
 
 }
