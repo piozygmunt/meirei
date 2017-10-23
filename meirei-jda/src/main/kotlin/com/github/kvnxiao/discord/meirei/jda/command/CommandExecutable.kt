@@ -15,11 +15,12 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.command
 
+import com.github.kvnxiao.discord.meirei.command.CommandContext
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 @FunctionalInterface
-interface ICommandExecutable {
+interface CommandExecutable {
 
-    fun executeWith(context: CommandContext, event: MessageReceivedEvent)
+    fun execute(context: CommandContext, event: MessageReceivedEvent)
 
 }

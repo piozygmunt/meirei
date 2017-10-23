@@ -15,14 +15,15 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.command
 
-import com.github.kvnxiao.discord.meirei.command.Command
+import com.github.kvnxiao.discord.meirei.annotations.Command
 import com.github.kvnxiao.discord.meirei.command.CommandDefaults
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.jda.permission.LevelDefaults
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionLevel
-import com.github.kvnxiao.discord.meirei.jda.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.permission.Permissions
+import com.github.kvnxiao.discord.meirei.annotations.Permissions
+import com.github.kvnxiao.discord.meirei.command.CommandParser
 import net.dv8tion.jda.core.Permission
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import java.lang.reflect.InvocationTargetException
@@ -30,7 +31,7 @@ import java.lang.reflect.Method
 import java.util.EnumSet
 import java.util.Stack
 
-class CommandParser : ICommandParser {
+class CommandParser : CommandParser {
 
     override fun parseAnnotations(instance: Any): List<ICommand> {
         // Instantiate new instance of class to reference method invocations
@@ -50,13 +51,13 @@ class CommandParser : ICommandParser {
                 val command: ICommand = this.createCommand(instance, method, annotation)
 
                 // Add main commands and chainable main commands to command bank
-                if (annotation.parentName != CommandDefaults.PARENT_NAME || annotation.parentName == annotation.uniqueName) {
+                if (annotation.parentName != CommandDefaults.PARENT_NAME || annotation.parentName == annotation.name) {
                     subCommands.put(command, annotation.parentName)
                 }
-                if (annotation.parentName == CommandDefaults.PARENT_NAME || annotation.parentName == annotation.uniqueName) {
+                if (annotation.parentName == CommandDefaults.PARENT_NAME || annotation.parentName == annotation.name) {
                     mainCommands.push(command)
                 }
-                commands.put(annotation.uniqueName, command)
+                commands.put(annotation.name, command)
             }
         }
 
@@ -78,7 +79,7 @@ class CommandParser : ICommandParser {
 
         val properties = CommandProperties(
             prefix = annotation.prefix,
-            uniqueName = annotation.uniqueName,
+            name = annotation.name,
             description = annotation.description,
             usage = annotation.usage,
             execWithSubCommands = annotation.execWithSubcommands,
@@ -87,7 +88,7 @@ class CommandParser : ICommandParser {
         )
 
         val level: EnumSet<Permission> = createPermissionLevels(permissionLevelAnn) ?: LevelDefaults.DEFAULT_PERMS_RW
-        val permissionProperties: PermissionProperties = createPermissions(permissionAnn, level) ?: PermissionProperties(level = level)
+        val permissionProperties: PermissionPropertiesJDA = createPermissions(permissionAnn, level) ?: PermissionPropertiesJDA(level = level)
 
         return object : ICommand(properties, permissionProperties) {
             @Throws(InvocationTargetException::class, IllegalAccessException::class)
@@ -104,13 +105,13 @@ class CommandParser : ICommandParser {
         return levels
     }
 
-    private fun createPermissions(permissionAnn: Permissions?, level: EnumSet<Permission>): PermissionProperties? {
+    private fun createPermissions(permissionAnn: Permissions?, level: EnumSet<Permission>): PermissionPropertiesJDA? {
         if (permissionAnn == null) return null
-        return PermissionProperties(
+        return PermissionPropertiesJDA(
             props = PermissionData(
                 requireMention = permissionAnn.reqMention,
-                forcePrivateReply = permissionAnn.forceDmReply,
-                allowPrivate = permissionAnn.allowDm,
+                forceDmReply = permissionAnn.forceDmReply,
+                allowDm = permissionAnn.allowDm,
                 removeCallMsg = permissionAnn.removeCallMsg,
                 rateLimitPeriodInMs = permissionAnn.rateLimitPeriodMs,
                 rateLimitOnGuild = permissionAnn.rateLimitOnGuild,

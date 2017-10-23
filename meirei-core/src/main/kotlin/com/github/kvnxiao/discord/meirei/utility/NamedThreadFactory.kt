@@ -19,9 +19,9 @@ import java.util.concurrent.ThreadFactory
 import java.util.concurrent.atomic.AtomicInteger
 
 /**
- * A simple thread factory with its name explicitly stated. This is used so that logged messages can differentiate between KommanDB processing threads and other threads.
+ * A simple thread factory with its id explicitly stated. This is used so that logged messages can differentiate between KommanDB processing threads and other threads.
  */
-class ThreadFactory : ThreadFactory {
+class NamedThreadFactory(name: String) : ThreadFactory {
     private val group: ThreadGroup
     private val threadNumber = AtomicInteger(1)
     private val namePrefix: String
@@ -32,7 +32,7 @@ class ThreadFactory : ThreadFactory {
             s.threadGroup
         else
             Thread.currentThread().threadGroup
-        namePrefix = "MeireiExec pool-${poolNumber.getAndIncrement()}-thread-"
+        namePrefix = "$name pool-${poolNumber.getAndIncrement()}-thread-"
     }
 
     override fun newThread(r: Runnable): Thread {

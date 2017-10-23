@@ -13,25 +13,9 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.jda.command
+package com.github.kvnxiao.discord.meirei.utility
 
-interface ICommandRegistry {
-
-    fun addCommand(command: ICommand): Boolean
-
-    fun deleteCommand(command: ICommand): Boolean
-
-    fun getCommandByAlias(alias: String): ICommand?
-
-    fun getAllCommands(): List<ICommand>
-
-    fun getAllCommandAliases(): List<String>
-
-    fun enableCommand()
-
-    fun disableCommand()
-
-    fun isAliasExist(input: String): Boolean
-
-    fun validateAliases(prefix: String, aliases: Set<String>): Boolean
-}
+typealias UserId = Long
+typealias GuildId = Long
+typealias CommandId = String
+typealias CommandAlias = String

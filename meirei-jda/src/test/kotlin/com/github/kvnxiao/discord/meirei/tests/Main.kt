@@ -16,38 +16,36 @@
 package com.github.kvnxiao.discord.meirei.tests
 
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
-import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
-import com.github.kvnxiao.discord.meirei.jda.command.CommandListener
+import com.github.kvnxiao.discord.meirei.jda.command.CommandDispatcher
 import com.github.kvnxiao.discord.meirei.jda.command.ICommand
-import com.github.kvnxiao.discord.meirei.jda.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
-import java.nio.charset.StandardCharsets
-import java.nio.file.Files
-import java.nio.file.Paths
 
 fun main(args: Array<String>) {
     val token = System.getenv("TEST_BOT_TOKEN")
     requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
     val builder = JDABuilder(AccountType.BOT)
         .setToken(token)
+    // Build client
+    val client = builder.buildBlocking()
 
     // Add command listener with application owner information
-    val commandListener = CommandListener()
+    val commandListener = CommandDispatcher(client)
     commandListener.registry.addCommand(object : ICommand(
         properties = CommandProperties(
-            uniqueName = "ping",
+            name = "ping",
             prefix = "/",
             aliases = setOf("ping", "hello")
         ),
-        permissions = PermissionProperties(
+        permissions = PermissionPropertiesJDA(
             props = PermissionData(
                 tokensPerPeriod = 1,
                 rateLimitOnGuild = true,
                 rateLimitPeriodInMs = 5000,
-                allowPrivate = true
+                allowDm = true
             )
         )
     ) {
@@ -56,10 +54,10 @@ fun main(args: Array<String>) {
         }
     }.addSubCommand(object : ICommand(
         properties = CommandProperties(
-            uniqueName = "pong",
+            name = "pong",
             aliases = setOf("pong", "pon")
         ),
-        permissions = PermissionProperties(
+        permissions = PermissionPropertiesJDA(
             props = PermissionData()
         )
     ) {
@@ -68,8 +66,5 @@ fun main(args: Array<String>) {
         }
     }))
     commandListener.addAnnotatedCommands(AnnotatedCommand::class)
-    builder.addEventListener(commandListener)
-
-    val client = builder.buildBlocking()
-    commandListener.setOwner(client.asBot().applicationInfo.complete().owner.idLong)
+    client.addEventListener(commandListener)
 }

@@ -13,23 +13,25 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.permission
+package com.github.kvnxiao.discord.meirei.annotations
+
+import com.github.kvnxiao.discord.meirei.permission.PermissionDefaults
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Permissions(
     /**
-     * @see[PermissionDefaults.REQUIRE_MENTION]
+     * @see[PermissionDefaults.ALLOW_DIRECT_MSGING]
      */
-    val reqMention: Boolean = PermissionDefaults.REQUIRE_MENTION,
+    val allowDm: Boolean = PermissionDefaults.ALLOW_DIRECT_MSGING,
     /**
-     * @see[PermissionDefaults.ALLOW_PRIVATE_MSGING]
+     * @see[PermissionDefaults.FORCE_DIRECT_MSGING]
      */
-    val allowDm: Boolean = PermissionDefaults.ALLOW_PRIVATE_MSGING,
+    val forceDm: Boolean = PermissionDefaults.FORCE_DIRECT_MSGING,
     /**
-     * @see[PermissionDefaults.FORCE_PRIVATE_REPLY]
+     * @see[PermissionDefaults.FORCE_DIRECT_REPLY]
      */
-    val forceDmReply: Boolean = PermissionDefaults.FORCE_PRIVATE_REPLY,
+    val forceDmReply: Boolean = PermissionDefaults.FORCE_DIRECT_REPLY,
     /**
      * @see[PermissionDefaults.REMOVE_CALL_MSG]
      */
@@ -43,11 +45,19 @@ annotation class Permissions(
      */
     val tokensPerPeriod: Long = PermissionDefaults.TOKENS_PER_PERIOD,
     /**
-     * see[PermissionDefaults.RATE_LIMIT_ON_GUILD]
+     * @see[PermissionDefaults.RATE_LIMIT_ON_GUILD]
      */
     val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD,
-
+    /**
+     * @see[PermissionDefaults.REQUIRE_BOT_OWNER]
+     */
     val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER,
-
-    val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER
+    /**
+     * @see[PermissionDefaults.REQUIRE_GUILD_OWNER]
+     */
+    val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER,
+    /**
+     * @see[PermissionDefaults.REQUIRE_MENTION]
+     */
+    val reqMention: Boolean = PermissionDefaults.REQUIRE_MENTION
 )

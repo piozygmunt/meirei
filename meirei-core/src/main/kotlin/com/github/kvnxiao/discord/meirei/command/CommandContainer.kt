@@ -15,4 +15,7 @@
  */
 package com.github.kvnxiao.discord.meirei.command
 
-interface ICommandContainer
+/**
+ * For specifying external commands being loaded
+ */
+interface CommandContainer

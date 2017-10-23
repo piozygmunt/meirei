@@ -16,29 +16,34 @@
 package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
+import com.github.kvnxiao.discord.meirei.utility.CommandId
 
-object CommandRegistry : ICommandRegistry {
+class CommandRegistryImpl : CommandRegistry {
 
     private val uniqueNameMap: MutableMap<String, ICommand> = mutableMapOf()
     private val aliasMap: MutableMap<String, String> = mutableMapOf()
 
+    private val nameToCommandMap: MutableMap<CommandId, CommandJDA>
+
+
     override fun addCommand(command: ICommand): Boolean {
-        // Check for prefix + alias clash and unique name clashes
+        // Check for prefix + alias clash and unique id clashes
         if (!validateAliases(command.properties.prefix, command.properties.aliases)) {
             Meirei.LOGGER.warn("Could not register command '$command' with prefix '${command.properties.prefix}' due to clashing with existing command prefix + aliases!")
             return false
-        } else if (uniqueNameMap.containsKey(command.properties.uniqueName)) {
-            Meirei.LOGGER.warn("Could not register command '$command' with prefix '${command.properties.prefix}' due to the unique name already existing in the registry!")
+        } else if (uniqueNameMap.containsKey(command.properties.name)) {
+            Meirei.LOGGER.warn("Could not register command '$command' with prefix '${command.properties.prefix}' due to the unique id already existing in the registry!")
             return false
         }
         // TODO: Custom prefixes
 
         // Insert command into aliasMap
         command.properties.aliases.forEach {
-            aliasMap.put(command.properties.prefix + it, command.properties.uniqueName)
+            aliasMap.put(command.properties.prefix + it, command.properties.name)
         }
         // Insert command into unique commands map
-        uniqueNameMap.put(command.properties.uniqueName, command)
+        uniqueNameMap.put(command.properties.name, command)
 
         Meirei.LOGGER.debug("Registered command '$command': prefix '${command.properties.prefix}', aliases '${command.properties.aliases}'")
         return true
@@ -54,23 +59,19 @@ object CommandRegistry : ICommandRegistry {
     }
 
     override fun getAllCommands(): List<ICommand> {
-        return uniqueNameMap.values.sortedBy { it.properties.uniqueName }.toList()
+        return uniqueNameMap.values.sortedBy { it.properties.name }.toList()
     }
 
     override fun getAllCommandAliases(): List<String> {
         return aliasMap.keys.sorted().toList()
     }
 
-    override fun enableCommand() {
-        TODO("enable command")
+    override fun enableCommand(): Boolean {
+        TODO("enable command for guild")
     }
 
-    override fun disableCommand() {
-        TODO("disable command")
-    }
-
-    override fun isAliasExist(input: String): Boolean {
-        return aliasMap.containsKey(input)
+    override fun disableCommand(): Boolean {
+        TODO("disable command for guild")
     }
 
     override fun validateAliases(prefix: String, aliases: Set<String>): Boolean {

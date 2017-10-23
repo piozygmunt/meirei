@@ -16,9 +16,11 @@
 package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
+import com.github.kvnxiao.discord.meirei.command.CommandParser
 import com.github.kvnxiao.discord.meirei.jda.external.ExternalCommandLoader
-import com.github.kvnxiao.discord.meirei.utility.SplitString
-import com.github.kvnxiao.discord.meirei.utility.ThreadFactory
+import com.github.kvnxiao.discord.meirei.utility.NamedThreadFactory
+import com.github.kvnxiao.discord.meirei.utility.splitString
+import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -28,17 +30,21 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import kotlin.reflect.KClass
 
-class CommandListener : ListenerAdapter() {
+class CommandDispatcher(client: JDA) : ListenerAdapter() {
 
     companion object {
         const val DEFAULT_THREAD_COUNT = 2
     }
 
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, ThreadFactory())
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, NamedThreadFactory("MeireiExec"))
     private val executor: CommandExecutor = CommandExecutor()
     private val extLoader: ExternalCommandLoader = ExternalCommandLoader()
-    private val parser: ICommandParser = CommandParser()
-    val registry: ICommandRegistry = CommandRegistry
+    private val parser: CommandParser = CommandParser()
+    val registry: ICommandRegistry = CommandRegistryImpl()
+
+    init {
+        this.setOwner(client.asBot().applicationInfo.complete().owner.idLong)
+    }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
         threadPool.submit {
@@ -47,7 +53,7 @@ class CommandListener : ListenerAdapter() {
             val isPrivate = event.isFromType(ChannelType.PRIVATE)
 
             // Split to check for bot mention
-            val (firstStr, secondStr) = SplitString(rawContent)
+            val (firstStr, secondStr) = splitString(rawContent)
             firstStr?.let {
                 // Check for bot mention
                 val hasBotMention = hasBotMention(it, message)
@@ -60,7 +66,7 @@ class CommandListener : ListenerAdapter() {
     }
 
     fun process(input: String, event: MessageReceivedEvent, isPrivate: Boolean, hasBotMention: Boolean) {
-        val (alias, args) = SplitString(input)
+        val (alias, args) = splitString(input)
 
         alias?.let {
             val command: ICommand? = registry.getCommandByAlias(it)
@@ -76,7 +82,7 @@ class CommandListener : ListenerAdapter() {
         return content == botMention
     }
 
-    fun setOwner(ownerId: Long) {
+    private fun setOwner(ownerId: Long) {
         executor.ownerId = ownerId
     }
 

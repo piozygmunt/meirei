@@ -16,7 +16,8 @@
 package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.utility.SplitString
+import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.utility.splitString
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import java.lang.reflect.InvocationTargetException
@@ -24,22 +25,20 @@ import java.util.EnumSet
 
 class CommandExecutor {
 
-    var ownerId: Long = 0
-
-    fun execute(command: ICommand, context: CommandContext, event: MessageReceivedEvent, isPrivate: Boolean, hasBotMention: Boolean): Boolean {
+    fun execute(command: ICommand, context: CommandContext, event: MessageReceivedEvent): Boolean {
         // Execute command if it's not disabled
         if (!command.properties.isDisabled) {
             try {
                 if (context.args != null && command.hasSubCommands()) {
-                    val (subAlias, subArgs) = SplitString(context.args)
+                    val (subAlias, subArgs) = splitString(context.args!!)
                     if (subAlias != null) {
                         val subCommand: ICommand? = command.subCommandMap[subAlias]
                         subCommand?.let {
-                            return executeWithSubCommand(command, context, it, subAlias, subArgs, event, isPrivate, hasBotMention)
+                            return executeWithSubCommand(command, context, it, subAlias, subArgs, event)
                         }
                     }
                 }
-                return executeCommand(command, context, event, isPrivate, hasBotMention)
+                return executeCommand(command, context, event)
             } catch (e: InvocationTargetException) {
                 Meirei.LOGGER.error("${e.localizedMessage}: Failed to invoke method bound to command '$command'!")
             } catch (e: IllegalAccessException) {
@@ -54,7 +53,7 @@ class CommandExecutor {
 
         // Execute the parent command alongside sub-command if this property is enabled
         if (mainCommand.properties.execWithSubCommands) {
-            executeCommand(mainCommand, mainContext, event, isPrivate, hasBotMention)
+            executeCommand(mainCommand, mainContext, event)
         }
 
         // Execute the sub-command
@@ -69,7 +68,7 @@ class CommandExecutor {
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
-        Meirei.LOGGER.debug("Executing command '${command.properties.uniqueName}' for user ${event.author}")
+        Meirei.LOGGER.debug("Executing command '${command.properties.name}' for user ${event.author}")
         command.executeWith(context, event)
         return true
     }
@@ -100,10 +99,10 @@ class CommandExecutor {
         val perms = command.permissions
 
         if (isPrivate) {
-            if (!perms.props.allowPrivate)
+            if (!perms.props.allowDm)
                 Meirei.LOGGER.debug("Execution of command $command ignored because the command does not allow private messages")
             else
-                return perms.props.allowPrivate
+                return perms.props.allowDm
         }
 
         // Check if command requires to be guild owner
@@ -127,7 +126,7 @@ class CommandExecutor {
         return if (hasUserPerms) {
             true
         } else {
-            Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.uniqueName}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
+            Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.name}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
             command.onMissingPerms(context, event)
             false
         }

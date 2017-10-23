@@ -16,10 +16,11 @@
 package com.github.kvnxiao.discord.meirei.jda.permission
 
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
+import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import net.dv8tion.jda.core.Permission
 import java.util.EnumSet
 
-data class PermissionProperties(
-    val props: PermissionData = PermissionData(),
+data class PermissionPropertiesJDA(
+    override val data: PermissionData = PermissionData(),
     val level: EnumSet<Permission> = LevelDefaults.DEFAULT_PERMS_RW
-)
+) : PermissionProperties

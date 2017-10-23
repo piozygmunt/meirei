@@ -17,23 +17,26 @@ package com.github.kvnxiao.discord.meirei.jda.command
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
-import com.github.kvnxiao.discord.meirei.command.RateLimitManager
-import com.github.kvnxiao.discord.meirei.jda.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.ratelimit.RateLimitManager
+import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
+import com.github.kvnxiao.discord.meirei.ratelimit.DiscordRateLimiter
+import com.github.kvnxiao.discord.meirei.utility.GuildId
+import com.github.kvnxiao.discord.meirei.utility.UserId
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 abstract class ICommand(
     var properties: CommandProperties,
-    var permissions: PermissionProperties) : ICommandExecutable {
+    var permissions: PermissionPropertiesJDA) : CommandExecutable {
 
-    protected val rateLimitManager = RateLimitManager()
+    private val rateLimitManager: DiscordRateLimiter = RateLimitManager()
 
     val subCommandMap: MutableMap<String, ICommand> = mutableMapOf()
     val subCommands: MutableSet<ICommand> = mutableSetOf()
 
     fun addSubCommand(subCommand: ICommand): ICommand {
         if (!validateAliases(subCommand.properties.aliases)) {
-            Meirei.LOGGER.error("Failed to link sub-command '${subCommand.properties.uniqueName}' to '${this.properties.uniqueName}' due to aliases already existing")
+            Meirei.LOGGER.error("Failed to link sub-command '${subCommand.properties.name}' to '${this.properties.name}' due to aliases already existing")
             return this
         }
 
@@ -41,7 +44,7 @@ abstract class ICommand(
             this.subCommandMap.put(it, subCommand)
         }
         subCommands.add(subCommand)
-        Meirei.LOGGER.debug("Linked sub-command '${subCommand.properties.uniqueName}' to parent '${this.properties.uniqueName}': prefix '${subCommand.properties.prefix}', aliases '${subCommand.properties.aliases}'")
+        Meirei.LOGGER.debug("Linked sub-command '${subCommand.properties.name}' to parent '${this.properties.name}': prefix '${subCommand.properties.prefix}', aliases '${subCommand.properties.aliases}'")
         return this
     }
 
@@ -59,12 +62,12 @@ abstract class ICommand(
         }
     }
 
-    fun isNotUserLimited(userId: Long): Boolean {
-        return rateLimitManager.isNotUserLimited(userId, this.permissions.props)
+    fun isNotUserLimited(userId: UserId): Boolean {
+        return rateLimitManager.isNotRateLimitedByUser(userId, this.permissions.data)
     }
 
-    fun isNotRateLimited(guildId: Long, userId: Long): Boolean {
-        return rateLimitManager.isNotRateLimited(guildId, userId, this.permissions.props)
+    fun isNotRateLimited(guildId: GuildId, userId: UserId): Boolean {
+        return rateLimitManager.isNotRateLimited(guildId, userId, this.permissions.data)
     }
 
     override fun toString(): String {

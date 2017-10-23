@@ -13,12 +13,12 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.jda.command
+package com.github.kvnxiao.discord.meirei.command
 
-import com.github.kvnxiao.discord.meirei.command.Command
+import com.github.kvnxiao.discord.meirei.annotations.Command
 import java.lang.reflect.Method
 
-interface ICommandParser {
+interface CommandParser {
 
     /**
      * Parse [Command] annotations in a class and returns a list of commands created from those annotations.
@@ -26,7 +26,7 @@ interface ICommandParser {
      * @param[instance] The instance object for which its class is to be parsed.
      * @return[List] The list of commands created after parsing.
      */
-    fun parseAnnotations(instance: Any): List<ICommand>
+    fun parseAnnotations(instance: Any): List<DiscordCommand>
 
     /**
      * Creates a command by parsing a single [Command] annotation, with its execution method set as the method
@@ -37,6 +37,6 @@ interface ICommandParser {
      * @param[annotation] The annotation to parse.
      * @return[ICommand] A newly created command with properties taken from the annotation.
      */
-    fun createCommand(instance: Any, method: Method, annotation: Command): ICommand
+    fun createCommand(instance: Any, method: Method, annotation: Command): DiscordCommand
 
 }

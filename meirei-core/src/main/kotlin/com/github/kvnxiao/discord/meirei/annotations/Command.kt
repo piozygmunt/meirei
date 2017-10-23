@@ -13,23 +13,25 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.command
+package com.github.kvnxiao.discord.meirei.annotations
+
+import com.github.kvnxiao.discord.meirei.command.CommandDefaults
 
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class Command(
     /**
-     * Defines the prefix of the command. Defaults to [CommandDefaults.PREFIX].
+     * Defines the unique identifier of the command. Will be prepended with [CommandGroup] value if that value exists.
      */
-    val prefix: String = CommandDefaults.PREFIX,
-    /**
-     * Defines the unique name identifier of the command. This field is always required.
-     */
-    val uniqueName: String,
+    val id: String,
     /**
      * Defines the aliases for the command represented in an array of strings. This field is always required.
      */
     val aliases: Array<String>,
+    /**
+     * Defines the prefix used to activate the command. Defaults to [CommandDefaults.PREFIX].
+     */
+    val prefix: String = CommandDefaults.PREFIX,
     /**
      * Defines the description of the command. Defaults to [CommandDefaults.NO_DESCRIPTION].
      */
@@ -39,7 +41,7 @@ annotation class Command(
      */
     val usage: String = CommandDefaults.NO_USAGE,
     /**
-     * Defines the unique name of the parent command which implies that this command will be a subcommand of that parent.
+     * Defines the unique id of the parent command which implies that this command will be a subcommand of that parent.
      * This is used to link subcommands to their parent commands. Defaults to [CommandDefaults.PARENT_NAME] as an empty string representing no parent command.
      */
     val parentName: String = CommandDefaults.PARENT_NAME,

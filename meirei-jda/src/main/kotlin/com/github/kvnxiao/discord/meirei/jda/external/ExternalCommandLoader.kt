@@ -16,8 +16,8 @@
 package com.github.kvnxiao.discord.meirei.jda.external
 
 import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.command.ICommandContainer
-import com.github.kvnxiao.discord.meirei.external.ExternalJarLoader
+import com.github.kvnxiao.discord.meirei.command.CommandContainer
+import com.github.kvnxiao.discord.meirei.external.JarLoader
 import com.github.kvnxiao.discord.meirei.jda.command.ICommand
 
 class ExternalCommandLoader {
@@ -25,7 +25,7 @@ class ExternalCommandLoader {
     fun loadExternalCommands(): Pair<List<ICommand>, List<Class<*>>> {
         val folder: String = System.getProperty(Meirei.DEFAULT_JAR_ENV_NAME) ?: "meirei/jars/"
         val pair: Pair<MutableList<ICommand>, MutableList<Class<*>>> = Pair(mutableListOf(), mutableListOf())
-        ExternalJarLoader.loadJars(folder).forEach { k, v ->
+        JarLoader().loadJarFiles(folder).forEach { k, v ->
             Meirei.LOGGER.debug("Loading $k for commands...")
             v.forEach {
                 try {
@@ -34,7 +34,7 @@ class ExternalCommandLoader {
                         // Load class itself as a command
                         val command = createCommandFromClass(classInstance)
                         if (command !== null) pair.first.add(command)
-                    } else if (ICommandContainer::class.java.isAssignableFrom(classInstance)) {
+                    } else if (CommandContainer::class.java.isAssignableFrom(classInstance)) {
                         // Parse annotations for commands
                         pair.second.add(classInstance)
                     }

@@ -15,16 +15,15 @@
  */
 package com.github.kvnxiao.discord.meirei.tests
 
-import com.github.kvnxiao.discord.meirei.command.Command
-import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
-import com.github.kvnxiao.discord.meirei.permission.Permissions
+import com.github.kvnxiao.discord.meirei.annotations.Command
+import com.github.kvnxiao.discord.meirei.annotations.Permissions
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 class AnnotatedCommand {
 
     @Command(
         prefix = "!",
-        uniqueName = "test",
+        name = "test",
         aliases = arrayOf("test", "te", "ann")
     )
     fun command(context: CommandContext, event: MessageReceivedEvent) {
@@ -32,7 +31,7 @@ class AnnotatedCommand {
     }
 
     @Command(
-        uniqueName = "child",
+        name = "child",
         aliases = arrayOf("child", "test"),
         parentName = "test"
     )
@@ -42,7 +41,7 @@ class AnnotatedCommand {
 
     @Command(
         prefix = "/",
-        uniqueName = "owner",
+        name = "owner",
         aliases = arrayOf("owner")
     )
     @Permissions(reqBotOwner = true)
@@ -52,7 +51,7 @@ class AnnotatedCommand {
 
     @Command(
         prefix = "/",
-        uniqueName = "guild",
+        name = "guild",
         aliases = arrayOf("guild")
     )
     @Permissions(reqGuildOwner = true)
