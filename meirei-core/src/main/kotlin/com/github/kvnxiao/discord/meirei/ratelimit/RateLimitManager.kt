@@ -26,7 +26,9 @@ import io.github.bucket4j.Bucket
 import io.github.bucket4j.Bucket4j
 import java.util.concurrent.TimeUnit
 
-class RateLimitManager : DiscordRateLimiter {
+class RateLimitManager(
+    private val id: String
+) : DiscordRateLimiter {
 
     // Map of user id to bucket
     private val userManager: Cache<UserId, Bucket> = Caffeine.newBuilder()
@@ -68,7 +70,7 @@ class RateLimitManager : DiscordRateLimiter {
     }
 
     private fun nullBucket(l: Long, isGuildLevel: Boolean): Bucket? {
-        Meirei.LOGGER.debug("Creating a new rate-limit bucket for ${if (isGuildLevel) "guild: $l" else "user: $l"}")
+        Meirei.LOGGER.debug("Creating a new rate-limit bucket for ${if (isGuildLevel) "guild: $l" else "user: $l"} with command $id")
         return null
     }
 }

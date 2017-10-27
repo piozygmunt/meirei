@@ -27,7 +27,7 @@ abstract class CommandJDA(
     override val registryAware: Boolean = false
 ) : DiscordCommand(id, registryAware), CommandExecutable {
 
-    private val rateLimitManager: DiscordRateLimiter = RateLimitManager()
+    private val rateLimitManager: DiscordRateLimiter = RateLimitManager(id)
 
     fun isNotUserLimited(userId: UserId, permissionData: PermissionData): Boolean {
         return rateLimitManager.isNotRateLimitedByUser(userId, permissionData)

@@ -21,7 +21,6 @@ import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.jda.MeireiJDA
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
-import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -42,11 +41,23 @@ fun main(args: Array<String>) {
             event.channel.sendMessage("This is a command created using constructors.").queue()
         }
     }
-
+    val constructorSubCommandId = "test.constructor.child"
+    val subCommand = object : CommandJDA(constructorSubCommandId) {
+        override fun execute(context: CommandContext, event: MessageReceivedEvent) {
+            event.channel.sendMessage("This is a child command created through constructors").queue()
+        }
+    }
     meirei.addCommands(
         CommandPackage(
             command,
-            CommandProperties(constructorCommandId),
+            CommandProperties(constructorCommandId, aliases = setOf("constructor", "cons"), execWithSubCommands = true),
+            PermissionPropertiesJDA()
+        )
+    )
+    meirei.addSubCommands(constructorCommandId,
+        CommandPackage(
+            subCommand,
+            CommandProperties(constructorSubCommandId, aliases = setOf("child")),
             PermissionPropertiesJDA()
         )
     )
