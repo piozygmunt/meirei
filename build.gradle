@@ -5,6 +5,7 @@ buildscript {
     ext.junit_version = '4.12'
     ext.spotless_version = '3.6.0'
     ext.slf4j_version = '1.7.25'
+    ext.logback_version = '1.2.3'
 
     repositories {
         jcenter()
@@ -48,6 +49,7 @@ subprojects {
         compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
         compile "org.slf4j:slf4j-api:$slf4j_version"
         testCompile "org.slf4j:slf4j-api:$slf4j_version"
+        testCompile "ch.qos.logback:logback-classic:$logback_version"
         testCompile "junit:junit:$junit_version"
     }
 

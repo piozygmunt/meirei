@@ -15,11 +15,13 @@
  */
 package com.github.kvnxiao.discord.meirei.tests
 
+import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
-import com.github.kvnxiao.discord.meirei.jda.command.CommandDispatcher
-import com.github.kvnxiao.discord.meirei.jda.command.ICommand
+import com.github.kvnxiao.discord.meirei.jda.MeireiJDA
+import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
+import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -29,42 +31,26 @@ fun main(args: Array<String>) {
     requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
     val builder = JDABuilder(AccountType.BOT)
         .setToken(token)
-    // Build client
-    val client = builder.buildBlocking()
 
-    // Add command listener with application owner information
-    val commandListener = CommandDispatcher(client)
-    commandListener.registry.addCommand(object : ICommand(
-        properties = CommandProperties(
-            name = "ping",
-            prefix = "/",
-            aliases = setOf("ping", "hello")
-        ),
-        permissions = PermissionPropertiesJDA(
-            props = PermissionData(
-                tokensPerPeriod = 1,
-                rateLimitOnGuild = true,
-                rateLimitPeriodInMs = 5000,
-                allowDm = true
-            )
-        )
-    ) {
-        override fun executeWith(context: CommandContext, event: MessageReceivedEvent) {
-            event.textChannel.sendMessage("pong!").queue()
+    // Add Meirei to JDA client
+    val meirei = MeireiJDA()
+
+    // Add command created through constructors
+    val constructorCommandId = "test.constructor"
+    val command = object : CommandJDA(constructorCommandId) {
+        override fun execute(context: CommandContext, event: MessageReceivedEvent) {
+            event.channel.sendMessage("This is a command created using constructors.").queue()
         }
-    }.addSubCommand(object : ICommand(
-        properties = CommandProperties(
-            name = "pong",
-            aliases = setOf("pong", "pon")
-        ),
-        permissions = PermissionPropertiesJDA(
-            props = PermissionData()
+    }
+
+    meirei.addCommands(
+        CommandPackage(
+            command,
+            CommandProperties(constructorCommandId),
+            PermissionPropertiesJDA()
         )
-    ) {
-        override fun executeWith(context: CommandContext, event: MessageReceivedEvent) {
-            event.textChannel.sendMessage("ok").queue()
-        }
-    }))
-    commandListener.addAnnotatedCommands(AnnotatedCommand::class)
-    client.addEventListener(commandListener)
+    )
+
+    // Build client
+    builder.addEventListener(meirei).buildAsync()
 }

@@ -16,5 +16,5 @@
 package com.github.kvnxiao.discord.meirei.permission
 
 open class PermissionProperties(
-    val data: PermissionData = PermissionData()
+    open val data: PermissionData = PermissionData()
 )
