@@ -13,13 +13,14 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests.impl
+package com.github.kvnxiao.discord.meirei.tests
 
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
-import com.github.kvnxiao.discord.meirei.tests.CommandImpl
+import com.github.kvnxiao.discord.meirei.tests.impl.CommandImpl
+import com.github.kvnxiao.discord.meirei.tests.impl.MeireiTestImpl
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

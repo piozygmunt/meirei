@@ -2,7 +2,6 @@ package com.github.kvnxiao.discord.meirei.tests.impl
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
-import com.github.kvnxiao.discord.meirei.tests.CommandImpl
 import com.github.kvnxiao.discord.meirei.utility.splitString
 
 class MeireiTestImpl : Meirei() {

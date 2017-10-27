@@ -1,4 +1,4 @@
-package com.github.kvnxiao.discord.meirei.tests
+package com.github.kvnxiao.discord.meirei.tests.impl
 
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
