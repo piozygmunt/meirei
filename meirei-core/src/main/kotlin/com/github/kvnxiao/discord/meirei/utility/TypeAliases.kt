@@ -19,3 +19,4 @@ typealias UserId = Long
 typealias GuildId = Long
 typealias CommandId = String
 typealias CommandAlias = String
+typealias CommandPrefix = String

@@ -1,3 +1,18 @@
+/*
+ *   Copyright (C) 2017 Ze Hao Xiao
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 package com.github.kvnxiao.discord.meirei.command.database
 
 import com.github.kvnxiao.discord.meirei.Meirei
@@ -7,7 +22,7 @@ import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import com.github.kvnxiao.discord.meirei.utility.CommandAlias
 import com.github.kvnxiao.discord.meirei.utility.CommandId
 
-class CommandRegistryImpl : CommandRegistry {
+class CommandRegistryImpl : CommandRegistry() {
 
     // Map for command executors
     private val idExecutorMap: MutableMap<CommandId, DiscordCommand> = mutableMapOf()
@@ -19,7 +34,10 @@ class CommandRegistryImpl : CommandRegistry {
     // Map for permission properties
     private val idPermissionsMap: MutableMap<CommandId, PermissionProperties> = mutableMapOf()
 
+    // Disabled commands
     private val disabledCommands: MutableSet<CommandId> = mutableSetOf()
+
+    private val parentIdSubCommandsMap: MutableMap<CommandId, SubCommandRegistry> = mutableMapOf()
 
     override fun addCommand(command: DiscordCommand, commandProperties: CommandProperties, permissionProperties: PermissionProperties): Boolean {
         // Check for prefix + alias clash and unique id clashes
@@ -47,7 +65,7 @@ class CommandRegistryImpl : CommandRegistry {
         return true
     }
 
-    override fun deleteCommand(id: String): Boolean {
+    override fun deleteCommand(id: CommandId): Boolean {
         // Remove from aliases map
         val properties = idPropertiesMap[id] ?: return false
         properties.aliases.forEach {
@@ -63,9 +81,55 @@ class CommandRegistryImpl : CommandRegistry {
         return true
     }
 
-    override fun getCommandByAlias(alias: String): DiscordCommand? {
+    override fun addSubCommand(subCommand: DiscordCommand, commandProperties: CommandProperties, permissionProperties: PermissionProperties, parentId: CommandId): Boolean {
+        // Update sub-command registry
+        val subCommandRegistry = parentIdSubCommandsMap.getOrPut(parentId, { SubCommandRegistryImpl(subCommand.id) })
+        val success = subCommandRegistry.addSubCommand(commandProperties, parentId)
+        return if (success) {
+            // Add sub-command to main registry
+            idExecutorMap.put(commandProperties.id, subCommand)
+            idPropertiesMap.put(commandProperties.id, commandProperties)
+            idPermissionsMap.put(commandProperties.id, permissionProperties)
+            true
+        } else {
+            parentIdSubCommandsMap.remove(parentId)
+            false
+        }
+    }
+
+    override fun removeSubCommand(subCommandId: CommandId, parentId: CommandId): Boolean {
+        val subCommandRegistry = parentIdSubCommandsMap[parentId] ?: return false
+        val subCommandProperties = idPropertiesMap[subCommandId] ?: return false
+
+        val success = subCommandRegistry.removeSubCommand(subCommandProperties)
+        if (success) {
+            // Remove sub-command info from main registry
+            idExecutorMap.remove(subCommandId)
+            idPropertiesMap.remove(subCommandId)
+            idPropertiesMap.remove(subCommandId)
+            if (subCommandRegistry.getAllSubCommandIds().isEmpty()) {
+                parentIdSubCommandsMap.remove(parentId)
+            }
+            return true
+        }
+        return false
+    }
+
+    override fun getCommandByAlias(alias: CommandAlias): DiscordCommand? {
         val id = aliasIdMap[alias]
         return if (id != null) idExecutorMap[id] else null
+    }
+
+    override fun getCommandById(id: CommandId): DiscordCommand? {
+        return idExecutorMap[id]
+    }
+
+    override fun getPropertiesById(id: CommandId): CommandProperties? {
+        return idPropertiesMap[id]
+    }
+
+    override fun getPermissionsById(id: CommandId): PermissionProperties? {
+        return idPermissionsMap[id]
     }
 
     override fun getAllCommands(sortById: Boolean): List<DiscordCommand> {
@@ -76,12 +140,30 @@ class CommandRegistryImpl : CommandRegistry {
         return if (sorted) aliasIdMap.keys.sorted().toList() else aliasIdMap.keys.toList()
     }
 
-    override fun enableCommand(id: String) {
+    override fun getSubCommandRegistry(parentId: String): SubCommandRegistry? {
+        return parentIdSubCommandsMap[parentId]
+    }
+
+    override fun getSubCommandByAlias(alias: CommandAlias, parentId: CommandId): DiscordCommand? {
+        val subCommandRegistry = getSubCommandRegistry(parentId)
+        val subCommandId = subCommandRegistry?.getSubCommandIdByAlias(alias)
+        return if (subCommandId != null) {
+            getCommandById(subCommandId)
+        } else {
+            null
+        }
+    }
+
+    override fun enableCommand(id: CommandId) {
         disabledCommands.remove(id)
     }
 
-    override fun disableCommand(id: String) {
+    override fun disableCommand(id: CommandId) {
         disabledCommands.add(id)
+    }
+
+    override fun hasSubCommands(parentId: String): Boolean {
+        return parentIdSubCommandsMap[parentId]?.containsCommands() ?: false
     }
 
     private fun validateAliases(prefix: String, aliases: Set<String>): Boolean {

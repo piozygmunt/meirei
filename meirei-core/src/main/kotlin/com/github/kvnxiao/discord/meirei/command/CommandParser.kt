@@ -35,7 +35,7 @@ interface CommandParser {
      * @param[instance] The instance object for which its class is to be parsed.
      * @param[method] The method to invoke for command execution.
      * @param[annotation] The annotation to parse.
-     * @return[ICommand] A newly created command with properties taken from the annotation.
+     * @return[DiscordCommand] A newly created command with properties taken from the annotation.
      */
     fun createCommand(instance: Any, method: Method, annotation: Command): DiscordCommand
 

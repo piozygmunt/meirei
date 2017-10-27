@@ -13,21 +13,22 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.command
+package com.github.kvnxiao.discord.meirei.command.database
 
+import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.utility.CommandAlias
 import com.github.kvnxiao.discord.meirei.utility.CommandId
 
-data class CommandProperties(
-    // Required properties for every command
-    val id: CommandId,
-    val aliases: Set<CommandAlias> = setOf(id),
-    val prefix: String = CommandDefaults.PREFIX,
-    val subCommandIds: Set<String> = setOf(),
-    // Metadata
-    val description: String = CommandDefaults.NO_DESCRIPTION,
-    val usage: String = CommandDefaults.NO_USAGE,
-    // Command settings
-    val execWithSubCommands: Boolean = CommandDefaults.EXEC_ALONGSIDE_SUBCOMMANDS,
-    val isDisabled: Boolean = CommandDefaults.IS_DISABLED
-)
+interface SubCommandRegistry {
+
+    fun getSubCommandIdByAlias(alias: CommandAlias): CommandId?
+
+    fun getAllSubCommandIds(sortById: Boolean = true): List<CommandId>
+
+    fun addSubCommand(subCommandProperties: CommandProperties, parentId: CommandId): Boolean
+
+    fun removeSubCommand(subCommandProperties: CommandProperties): Boolean
+
+    fun containsCommands(): Boolean
+
+}
