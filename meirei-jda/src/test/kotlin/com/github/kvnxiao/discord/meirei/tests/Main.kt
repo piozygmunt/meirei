@@ -24,6 +24,8 @@ import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.tests.annotated.NestedAnnotatedCommand
+import com.github.kvnxiao.discord.meirei.tests.annotated.PermissionCommand
+import com.github.kvnxiao.discord.meirei.tests.annotated.RegistryAwareCommand
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -64,7 +66,12 @@ fun main(args: Array<String>) {
             PermissionPropertiesJDA()
         )
     )
-    meirei.addAnnotatedCommands(AnnotatedCommand(), NestedAnnotatedCommand())
+    meirei.addAnnotatedCommands(
+        AnnotatedCommand(),
+        NestedAnnotatedCommand(),
+        PermissionCommand(),
+        RegistryAwareCommand()
+    )
 
     // Build client
     builder.addEventListener(meirei).buildAsync()

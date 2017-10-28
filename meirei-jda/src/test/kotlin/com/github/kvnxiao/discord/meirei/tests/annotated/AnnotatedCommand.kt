@@ -20,7 +20,7 @@ import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
-@CommandGroup("test.annotated")
+@CommandGroup("test.annotated.normal")
 class AnnotatedCommand {
 
     companion object {

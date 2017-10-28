@@ -17,6 +17,7 @@ package com.github.kvnxiao.discord.meirei.command.database
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandDefaults
+import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
@@ -150,8 +151,19 @@ class CommandRegistryImpl : CommandRegistry() {
         return idPermissionsMap[id]
     }
 
-    override fun getAllCommands(sortById: Boolean): List<DiscordCommand> {
-        return if (sortById) idExecutorMap.values.sortedBy { it.id }.toList() else idExecutorMap.values.toList()
+    override fun getAllCommands(sortById: Boolean): List<CommandPackage> {
+        return if (sortById) {
+            idExecutorMap.values
+                .filter { idPropertiesMap[it.id]!!.parentId == CommandDefaults.PARENT_ID }
+                .map { CommandPackage(it, idPropertiesMap[it.id]!!, idPermissionsMap[it.id]!!) }
+                .sortedBy { it.command.id }
+                .toList()
+        } else {
+            idExecutorMap.values
+                .filter { idPropertiesMap[it.id]!!.parentId == CommandDefaults.PARENT_ID }
+                .map { CommandPackage(it, idPropertiesMap[it.id]!!, idPermissionsMap[it.id]!!) }
+                .toList()
+        }
     }
 
     override fun getAllCommandAliases(sorted: Boolean): List<String> {

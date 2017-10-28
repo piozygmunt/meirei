@@ -15,6 +15,7 @@
  */
 package com.github.kvnxiao.discord.meirei.command.database
 
+import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
@@ -31,14 +32,12 @@ interface CommandRegistryRead {
     fun getSubCommandByAlias(alias: CommandAlias, parentId: CommandId): DiscordCommand?
 
     // Get list of all commands
-    fun getAllCommands(sortById: Boolean = true): List<DiscordCommand>
-
-    // Sub-command info
-    fun hasSubCommands(parentId: String): Boolean
-
+    fun getAllCommands(sortById: Boolean = true): List<CommandPackage>
     // Get list of all prefixed aliases
     fun getAllCommandAliases(sorted: Boolean = true): List<String>
 
+    // Sub-command info
+    fun hasSubCommands(parentId: String): Boolean
     fun getSubCommandRegistry(parentId: String): SubCommandRegistry?
 
 }

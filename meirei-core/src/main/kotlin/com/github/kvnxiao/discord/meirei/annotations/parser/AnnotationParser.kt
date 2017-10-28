@@ -87,7 +87,7 @@ abstract class AnnotationParser {
         val commandGroup = instance.javaClass.getCommandGroup()
 
         val id = appendGroup(annotation.id, commandGroup)
-        val parentId = appendGroup(annotation.parentId, commandGroup)
+        val parentId = if (annotation.parentId != CommandDefaults.PARENT_ID) appendGroup(annotation.parentId, commandGroup) else annotation.parentId
 
         val properties = annotation.createProperties(id, parentId)
         val permissionProperties = method.createPermissionProperties()
