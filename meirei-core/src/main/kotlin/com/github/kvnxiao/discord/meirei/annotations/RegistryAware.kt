@@ -15,16 +15,6 @@
  */
 package com.github.kvnxiao.discord.meirei.annotations
 
-/**
- * Top-level class annotation to describe the "group" id of a class that may contain multiple annotated command
- * definitions. Each annotated command declared within the class will have their names prepended by this annotation's
- * value.
- *
- * For example, a class named FooCommands annotated with @CommandGroup("foo"), and containing a command named "bar".
- * The id set for the "bar" command within its [CommandProperties] will be "foo.bar".
- */
 @Retention(AnnotationRetention.RUNTIME)
-@Target(AnnotationTarget.CLASS)
-annotation class CommandGroup(
-    val id: String
-)
+@Target(AnnotationTarget.FUNCTION)
+annotation class RegistryAware

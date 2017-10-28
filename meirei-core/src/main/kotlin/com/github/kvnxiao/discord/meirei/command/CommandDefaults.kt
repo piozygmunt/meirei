@@ -19,7 +19,7 @@ object CommandDefaults {
     /**
      * The default parent id, set as an empty string.
      */
-    const val PARENT_NAME = ""
+    const val PARENT_ID = ""
     /**
      * The default command package id, set as an empty string.
      */

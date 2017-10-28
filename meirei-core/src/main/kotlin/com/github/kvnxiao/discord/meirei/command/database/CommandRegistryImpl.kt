@@ -16,6 +16,7 @@
 package com.github.kvnxiao.discord.meirei.command.database
 
 import com.github.kvnxiao.discord.meirei.Meirei
+import com.github.kvnxiao.discord.meirei.command.CommandDefaults
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
@@ -82,14 +83,30 @@ class CommandRegistryImpl : CommandRegistry() {
     }
 
     override fun addSubCommand(subCommand: DiscordCommand, commandProperties: CommandProperties, permissionProperties: PermissionProperties, parentId: CommandId): Boolean {
+        // Fix commandProperties if it is missing parent-id link
+        val properties = if (commandProperties.parentId == CommandDefaults.PARENT_ID) {
+            CommandProperties(
+                commandProperties.id,
+                commandProperties.aliases,
+                commandProperties.prefix,
+                commandProperties.description,
+                commandProperties.usage,
+                commandProperties.execWithSubCommands,
+                commandProperties.isDisabled,
+                parentId
+            )
+        } else {
+            commandProperties
+        }
+
         // Update sub-command registry
         val subCommandRegistry = parentIdSubCommandsMap.getOrPut(parentId, { SubCommandRegistryImpl(subCommand.id) })
-        val success = subCommandRegistry.addSubCommand(commandProperties, parentId)
+        val success = subCommandRegistry.addSubCommand(properties, parentId)
         return if (success) {
             // Add sub-command to main registry
-            idExecutorMap.put(commandProperties.id, subCommand)
-            idPropertiesMap.put(commandProperties.id, commandProperties)
-            idPermissionsMap.put(commandProperties.id, permissionProperties)
+            idExecutorMap.put(properties.id, subCommand)
+            idPropertiesMap.put(properties.id, properties)
+            idPermissionsMap.put(properties.id, permissionProperties)
             true
         } else {
             parentIdSubCommandsMap.remove(parentId)

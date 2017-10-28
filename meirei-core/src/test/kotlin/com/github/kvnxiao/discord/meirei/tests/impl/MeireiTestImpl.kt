@@ -16,31 +16,36 @@
 package com.github.kvnxiao.discord.meirei.tests.impl
 
 import com.github.kvnxiao.discord.meirei.Meirei
+import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
+import com.github.kvnxiao.discord.meirei.annotations.parser.CommandRelations
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.utility.splitString
 
 class MeireiTestImpl : Meirei() {
 
-    fun execute(input: String): Boolean {
+    private val commandParser: AnnotationParser = CommandParserImpl()
+
+    fun process(input: String): Boolean {
         val (alias, args) = splitString(input)
 
-        if (alias != null) {
-            val command = registry.getCommandByAlias(alias) as CommandImpl?
-            if (command != null) {
-                val properties = registry.getPropertiesById(command.id)
-                val permissions = registry.getPermissionsById(command.id)
+        alias?.let {
+            val command = registry.getCommandByAlias(it) as CommandImpl?
+            command?.let {
+                val properties = registry.getPropertiesById(it.id)
+                val permissions = registry.getPermissionsById(it.id)
                 if (properties != null && permissions != null) {
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
-                        readOnlyCommandRegistry = if (command.registryAware) registry else null)
-                    return executeCommand(command, context)
+                        readOnlyCommandRegistry = if (it.registryAware) registry else null)
+                    Meirei.LOGGER.debug("Processing command: ${it.id}")
+                    return execute(it, context)
                 }
             }
         }
         return false
     }
 
-    private fun executeCommand(command: CommandImpl, context: CommandContext): Boolean {
+    private fun execute(command: CommandImpl, context: CommandContext): Boolean {
         if (!context.properties.isDisabled) {
             // Check sub-commands
             val args = context.args
@@ -55,19 +60,41 @@ class MeireiTestImpl : Meirei() {
                         if (subProperties != null && subPermissions != null) {
                             // Execute sub-command
                             val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
-                                readOnlyCommandRegistry = if (subCommand.registryAware) registry else null)
+                                context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
                             // Execute parent-command if the boolean value is true
                             if (context.properties.execWithSubCommands) command.execute(context)
-                            return executeCommand(subCommand, subContext)
+                            return execute(subCommand, subContext)
                         }
                     }
                 }
-            } else {
-                command.execute(context)
-                return true
             }
+            return executeCommand(command, context)
         }
         return false
+    }
+
+    private fun executeCommand(command: CommandImpl, context: CommandContext): Boolean {
+        return command.execute(context)
+    }
+
+    fun addAnnotatedCommands(vararg instances: Any) {
+        instances.forEach {
+            val relations = commandParser.parseAnnotations(it)
+            relations.forEach {
+                addCommands(it.pkg)
+                addNestedSubCommands(it)
+            }
+        }
+    }
+
+    private fun addNestedSubCommands(relation: CommandRelations) {
+        val subPkgs = relation.subPkgs
+        if (subPkgs.isNotEmpty()) {
+            subPkgs.forEach { subRelation ->
+                addSubCommands(subRelation.pkg.commandProperties.parentId, subRelation.pkg)
+                addNestedSubCommands(subRelation)
+            }
+        }
     }
 
 }

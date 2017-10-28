@@ -23,11 +23,12 @@ data class CommandProperties(
     val id: CommandId,
     val aliases: Set<CommandAlias> = setOf(id),
     val prefix: String = CommandDefaults.PREFIX,
-    val subCommandIds: Set<String> = setOf(),
     // Metadata
     val description: String = CommandDefaults.NO_DESCRIPTION,
     val usage: String = CommandDefaults.NO_USAGE,
     // Command settings
     val execWithSubCommands: Boolean = CommandDefaults.EXEC_ALONGSIDE_SUBCOMMANDS,
-    val isDisabled: Boolean = CommandDefaults.IS_DISABLED
+    val isDisabled: Boolean = CommandDefaults.IS_DISABLED,
+    // Parent command id
+    val parentId: CommandId = CommandDefaults.PARENT_ID
 )

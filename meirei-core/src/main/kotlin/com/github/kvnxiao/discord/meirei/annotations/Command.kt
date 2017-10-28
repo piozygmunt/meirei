@@ -42,9 +42,9 @@ annotation class Command(
     val usage: String = CommandDefaults.NO_USAGE,
     /**
      * Defines the unique id of the parent command which implies that this command will be a subcommand of that parent.
-     * This is used to link subcommands to their parent commands. Defaults to [CommandDefaults.PARENT_NAME] as an empty string representing no parent command.
+     * This is used to link subcommands to their parent commands. Defaults to [CommandDefaults.PARENT_ID] as an empty string representing no parent command.
      */
-    val parentName: String = CommandDefaults.PARENT_NAME,
+    val parentId: String = CommandDefaults.PARENT_ID,
     /**
      * Defines whether the command should execute alongside its subcommand or be skipped when subcommands are processed.
      * Defaults to [CommandDefaults.EXEC_ALONGSIDE_SUBCOMMANDS].

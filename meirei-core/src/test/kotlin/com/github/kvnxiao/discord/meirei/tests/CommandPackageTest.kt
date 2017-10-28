@@ -19,6 +19,7 @@ import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.tests.impl.CommandImpl
 import com.github.kvnxiao.discord.meirei.tests.impl.MeireiTestImpl
 import org.junit.Assert.assertEquals
@@ -45,9 +46,9 @@ class CommandPackageTest {
         )
 
         // Validate
-        assertTrue(meirei.execute("$prefix$alias"))
-        assertTrue(meirei.execute("$prefix$regAwareAlias"))
-        assertFalse(meirei.execute("not a real command"))
+        assertTrue(meirei.process("$prefix$alias"))
+        assertTrue(meirei.process("$prefix$regAwareAlias"))
+        assertFalse(meirei.process("not a real command"))
 
         // Cleanup
         assertTrue(meirei.registry.deleteCommand(id))
@@ -76,9 +77,9 @@ class CommandPackageTest {
         assertEquals(3, meirei.registry.getAllCommands().size)
 
         // Validate
-        assertTrue(meirei.execute("$prefix$parentAlias"))
-        assertTrue(meirei.execute("$prefix$parentAlias $childAlphaAlias"))
-        assertTrue(meirei.execute("$prefix$parentAlias $childBetaAlias"))
+        assertTrue(meirei.process("$prefix$parentAlias"))
+        assertTrue(meirei.process("$prefix$parentAlias $childAlphaAlias"))
+        assertTrue(meirei.process("$prefix$parentAlias $childBetaAlias"))
 
         // Cleanup
         assertTrue(meirei.registry.removeSubCommand(childAlpha, parentId))
@@ -87,6 +88,19 @@ class CommandPackageTest {
         assertTrue(meirei.registry.deleteCommand(parentId))
         assertTrue(meirei.registry.getAllCommands().isEmpty())
         assertTrue(meirei.registry.getSubCommandRegistry(parentId) == null)
+    }
+
+    @Test
+    fun testAnnotatedCommands() {
+        meirei.addAnnotatedCommands(AnnotatedCommand())
+
+        // Validate
+        assertTrue(meirei.process("/parent 123"))
+        assertTrue(meirei.process("/parent child"))
+        assertTrue(meirei.process("/parent child beta"))
+        assertTrue(meirei.process("/parent child beta charlie"))
+        assertTrue(meirei.process("/parent child third"))
+        assertTrue(meirei.process("/parent child third fourth"))
     }
 
 }

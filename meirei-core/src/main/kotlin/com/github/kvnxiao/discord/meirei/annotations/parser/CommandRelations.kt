@@ -13,19 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests.impl
+package com.github.kvnxiao.discord.meirei.annotations.parser
 
-import com.github.kvnxiao.discord.meirei.command.CommandContext
-import com.github.kvnxiao.discord.meirei.command.DiscordCommand
+import com.github.kvnxiao.discord.meirei.command.CommandPackage
 
-data class CommandImpl(
-    override val id: String,
-    override val registryAware: Boolean = false
-) : DiscordCommand(id, registryAware) {
+data class CommandRelations(
+    val pkg: CommandPackage
+) {
+    val subPkgs: MutableSet<CommandRelations> = mutableSetOf()
 
-    fun execute(context: CommandContext): Boolean {
-        System.out.println("$id is executing with args: ${context.args}. registry=${context.readOnlyCommandRegistry}. parent=${context.properties.parentId}")
-        return registryAware == (context.readOnlyCommandRegistry != null)
+    fun toTreeString(depth: Int = 0): String {
+        return pkg.commandProperties.id +
+            if (subPkgs.isNotEmpty()) "\n${"\t".repeat(depth + 1)}${subPkgs.joinToString(separator = "\n${"\t".repeat(depth + 1)}") { it.toTreeString(depth + 1) }}"
+            else ""
     }
 
 }
