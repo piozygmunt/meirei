@@ -16,12 +16,19 @@
 package com.github.kvnxiao.discord.meirei.annotations.parser
 
 import com.github.kvnxiao.discord.meirei.annotations.Command
+import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
+import com.github.kvnxiao.discord.meirei.annotations.Permissions
+import com.github.kvnxiao.discord.meirei.annotations.RegistryAware
 import com.github.kvnxiao.discord.meirei.command.CommandDefaults
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
+import com.github.kvnxiao.discord.meirei.command.CommandProperties
+import com.github.kvnxiao.discord.meirei.command.DiscordCommand
+import com.github.kvnxiao.discord.meirei.permission.PermissionData
+import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import com.github.kvnxiao.discord.meirei.utility.CommandId
 import java.lang.reflect.Method
 
-interface AnnotationParser {
+abstract class AnnotationParser {
 
     /**
      * Parse [Command] annotations in a class and returns a list of commands created from those annotations.
@@ -29,7 +36,7 @@ interface AnnotationParser {
      * @param[instance] The instance object for which its class is to be parsed.
      * @return[List] The list of commands created after parsing.
      */
-    fun parseAnnotations(instance: Any): Set<CommandRelations> {
+    open fun parseAnnotations(instance: Any): Set<CommandRelations> {
         val clazz = instance::class.java
 
         val subCommands: MutableSet<CommandRelations> = mutableSetOf()
@@ -76,6 +83,56 @@ interface AnnotationParser {
      * @param[annotation] The annotation to parse.
      * @return[DiscordCommand] A newly created command with properties taken from the annotation.
      */
-    fun createCommandPackage(instance: Any, method: Method, annotation: Command): CommandPackage
+    fun createCommandPackage(instance: Any, method: Method, annotation: Command): CommandPackage {
+        val commandGroup = instance.javaClass.getCommandGroup()
+
+        val id = appendGroup(annotation.id, commandGroup)
+        val parentId = appendGroup(annotation.parentId, commandGroup)
+
+        val properties = annotation.createProperties(id, parentId)
+        val permissionProperties = method.createPermissionProperties()
+
+        val command = createCommand(id, method.isAnnotationPresent(RegistryAware::class.java), method, instance)
+
+        return CommandPackage(command, properties, permissionProperties)
+    }
+
+    abstract fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand
+
+    protected fun Method.getPermissions(): Permissions? = if (this.isAnnotationPresent(Permissions::class.java)) this.getAnnotation(Permissions::class.java) else null
+    protected fun Class<*>.getCommandGroup(): CommandGroup? = if (this.javaClass.isAnnotationPresent(CommandGroup::class.java)) this.javaClass.getAnnotation(CommandGroup::class.java) else null
+    protected fun appendGroup(id: String, commandGroup: CommandGroup?) = if (commandGroup != null) "${commandGroup.id}.$id" else id
+
+    open protected fun Command.createProperties(newId: String, newParentId: String): CommandProperties {
+        return CommandProperties(
+            prefix = this.prefix,
+            id = newId,
+            parentId = newParentId,
+            description = this.description,
+            usage = this.usage,
+            execWithSubCommands = this.execWithSubcommands,
+            isDisabled = this.isDisabled,
+            aliases = this.aliases.toSet()
+        )
+    }
+
+    open protected fun Method.createPermissionProperties(): PermissionProperties {
+        val permissions = this.getPermissions()
+        return if (permissions != null) {
+            PermissionProperties(PermissionData(
+                requireMention = permissions.reqMention,
+                forceDmFromSender = permissions.forceDmReply,
+                allowDmFromSender = permissions.allowDm,
+                removeCallMsg = permissions.removeCallMsg,
+                rateLimitPeriodInMs = permissions.rateLimitPeriodMs,
+                rateLimitOnGuild = permissions.rateLimitOnGuild,
+                tokensPerPeriod = permissions.tokensPerPeriod,
+                reqBotOwner = permissions.reqBotOwner,
+                reqGuildOwner = permissions.reqGuildOwner
+            ))
+        } else {
+            PermissionProperties()
+        }
+    }
 
 }

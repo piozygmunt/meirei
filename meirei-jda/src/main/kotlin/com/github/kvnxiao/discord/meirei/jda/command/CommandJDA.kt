@@ -23,8 +23,8 @@ import com.github.kvnxiao.discord.meirei.utility.GuildId
 import com.github.kvnxiao.discord.meirei.utility.UserId
 
 abstract class CommandJDA(
-    override val id: String,
-    override val registryAware: Boolean = false
+    final override val id: String,
+    final override val registryAware: Boolean = false
 ) : DiscordCommand(id, registryAware), CommandExecutable {
 
     private val rateLimitManager: DiscordRateLimiter = RateLimitManager(id)

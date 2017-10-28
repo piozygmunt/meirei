@@ -15,54 +15,12 @@
  */
 package com.github.kvnxiao.discord.meirei.tests.impl
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.annotations.Permissions
-import com.github.kvnxiao.discord.meirei.annotations.RegistryAware
 import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
-import com.github.kvnxiao.discord.meirei.command.CommandPackage
-import com.github.kvnxiao.discord.meirei.command.CommandProperties
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import java.lang.reflect.Method
 
-class CommandParserImpl : AnnotationParser {
+class CommandParserImpl : AnnotationParser() {
 
-    override fun createCommandPackage(instance: Any, method: Method, annotation: Command): CommandPackage {
-        val permissionAnnotation: Permissions? = if (method.isAnnotationPresent(Permissions::class.java)) method.getAnnotation(Permissions::class.java) else null
-        val commandGroup: CommandGroup? = if (instance.javaClass.isAnnotationPresent(CommandGroup::class.java)) instance.javaClass.getAnnotation(CommandGroup::class.java) else null
+    override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand = CommandImpl(id, isRegistryAware)
 
-        val id = if (commandGroup != null) "${commandGroup.id}.${annotation.id}" else annotation.id
-        val parentId = if (commandGroup != null) "${commandGroup.id}.${annotation.parentId}" else annotation.parentId
-        val properties = CommandProperties(
-            prefix = annotation.prefix,
-            id = id,
-            parentId = parentId,
-            description = annotation.description,
-            usage = annotation.usage,
-            execWithSubCommands = annotation.execWithSubcommands,
-            isDisabled = annotation.isDisabled,
-            aliases = annotation.aliases.toSet()
-        )
-
-        val permissionProperties: PermissionProperties = if (permissionAnnotation != null) {
-            PermissionProperties(PermissionData(
-                requireMention = permissionAnnotation.reqMention,
-                forceDmFromSender = permissionAnnotation.forceDmReply,
-                allowDmFromSender = permissionAnnotation.allowDm,
-                removeCallMsg = permissionAnnotation.removeCallMsg,
-                rateLimitPeriodInMs = permissionAnnotation.rateLimitPeriodMs,
-                rateLimitOnGuild = permissionAnnotation.rateLimitOnGuild,
-                tokensPerPeriod = permissionAnnotation.tokensPerPeriod,
-                reqBotOwner = permissionAnnotation.reqBotOwner,
-                reqGuildOwner = permissionAnnotation.reqGuildOwner
-            ))
-        } else {
-            PermissionProperties()
-        }
-
-        val command = CommandImpl(id, method.isAnnotationPresent(RegistryAware::class.java))
-
-        return CommandPackage(command, properties, permissionProperties)
-    }
 }
