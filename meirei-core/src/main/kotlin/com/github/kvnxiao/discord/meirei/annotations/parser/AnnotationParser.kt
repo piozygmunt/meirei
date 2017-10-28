@@ -100,7 +100,7 @@ abstract class AnnotationParser {
     abstract fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand
 
     protected fun Method.getPermissions(): Permissions? = if (this.isAnnotationPresent(Permissions::class.java)) this.getAnnotation(Permissions::class.java) else null
-    protected fun Class<*>.getCommandGroup(): CommandGroup? = if (this.javaClass.isAnnotationPresent(CommandGroup::class.java)) this.javaClass.getAnnotation(CommandGroup::class.java) else null
+    protected fun Class<Any>.getCommandGroup(): CommandGroup? = if (this.isAnnotationPresent(CommandGroup::class.java)) this.getAnnotation(CommandGroup::class.java) else null
     protected fun appendGroup(id: String, commandGroup: CommandGroup?) = if (commandGroup != null) "${commandGroup.id}.$id" else id
 
     open protected fun Command.createProperties(newId: String, newParentId: String): CommandProperties {

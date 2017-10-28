@@ -15,6 +15,8 @@
  */
 package com.github.kvnxiao.discord.meirei
 
+import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
+import com.github.kvnxiao.discord.meirei.annotations.parser.CommandRelations
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
 import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
@@ -22,8 +24,10 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 open class Meirei(
-    val registry: CommandRegistry = CommandRegistryImpl()
+    val registry: CommandRegistry = CommandRegistryImpl(),
+    val commandParser: AnnotationParser
 ) {
+
     companion object {
         @JvmStatic
         val LOGGER: Logger = LoggerFactory.getLogger(Meirei::class.java)
@@ -41,6 +45,26 @@ open class Meirei(
     fun addSubCommands(parentId: String, vararg commandPackage: CommandPackage) {
         commandPackage.forEach {
             registry.addSubCommand(it.command, it.commandProperties, it.permissionProperties, parentId)
+        }
+    }
+
+    fun addAnnotatedCommands(vararg instances: Any) {
+        instances.forEach {
+            val relations = commandParser.parseAnnotations(it)
+            relations.forEach {
+                addCommands(it.pkg)
+                addNestedSubCommands(it)
+            }
+        }
+    }
+
+    private fun addNestedSubCommands(relation: CommandRelations) {
+        val subPkgs = relation.subPkgs
+        if (subPkgs.isNotEmpty()) {
+            subPkgs.forEach { subRelation ->
+                addSubCommands(subRelation.pkg.commandProperties.parentId, subRelation.pkg)
+                addNestedSubCommands(subRelation)
+            }
         }
     }
 

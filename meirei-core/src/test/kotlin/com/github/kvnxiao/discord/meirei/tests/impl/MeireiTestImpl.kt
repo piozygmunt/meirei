@@ -16,14 +16,10 @@
 package com.github.kvnxiao.discord.meirei.tests.impl
 
 import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
-import com.github.kvnxiao.discord.meirei.annotations.parser.CommandRelations
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.utility.splitString
 
-class MeireiTestImpl : Meirei() {
-
-    private val commandParser: AnnotationParser = CommandParserImpl()
+class MeireiTestImpl : Meirei(commandParser = CommandParserImpl()) {
 
     fun process(input: String): Boolean {
         val (alias, args) = splitString(input)
@@ -75,26 +71,6 @@ class MeireiTestImpl : Meirei() {
 
     private fun executeCommand(command: CommandImpl, context: CommandContext): Boolean {
         return command.execute(context)
-    }
-
-    fun addAnnotatedCommands(vararg instances: Any) {
-        instances.forEach {
-            val relations = commandParser.parseAnnotations(it)
-            relations.forEach {
-                addCommands(it.pkg)
-                addNestedSubCommands(it)
-            }
-        }
-    }
-
-    private fun addNestedSubCommands(relation: CommandRelations) {
-        val subPkgs = relation.subPkgs
-        if (subPkgs.isNotEmpty()) {
-            subPkgs.forEach { subRelation ->
-                addSubCommands(subRelation.pkg.commandProperties.parentId, subRelation.pkg)
-                addNestedSubCommands(subRelation)
-            }
-        }
     }
 
 }

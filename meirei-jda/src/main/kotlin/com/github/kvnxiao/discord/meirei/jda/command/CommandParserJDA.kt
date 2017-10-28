@@ -15,14 +15,9 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.command
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.annotations.Permissions
 import com.github.kvnxiao.discord.meirei.annotations.RegistryAware
 import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
 import com.github.kvnxiao.discord.meirei.command.CommandContext
-import com.github.kvnxiao.discord.meirei.command.CommandPackage
-import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import com.github.kvnxiao.discord.meirei.jda.permission.LevelDefaults
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionLevel
@@ -34,7 +29,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import java.lang.reflect.Method
 import java.util.EnumSet
 
-class CommandParser : AnnotationParser() {
+class CommandParserJDA : AnnotationParser() {
 
     override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand {
         return object : CommandJDA(id, method.isAnnotationPresent(RegistryAware::class.java)) {

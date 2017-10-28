@@ -16,10 +16,9 @@
 package com.github.kvnxiao.discord.meirei.jda
 
 import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
-import com.github.kvnxiao.discord.meirei.jda.command.CommandParser
+import com.github.kvnxiao.discord.meirei.jda.command.CommandParserJDA
 import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.utility.NamedThreadFactory
@@ -34,11 +33,10 @@ import java.util.EnumSet
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class MeireiJDA : Meirei(), EventListener {
+class MeireiJDA : Meirei(commandParser = CommandParserJDA()), EventListener {
 
     private var botOwnerId: Long = 0
     private val errorHandler = ErrorHandler()
-    private val commandParser: AnnotationParser = CommandParser()
 
     companion object {
         const val DEFAULT_THREAD_COUNT = 2
