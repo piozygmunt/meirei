@@ -82,17 +82,19 @@ class CommandPackageTest {
         assertTrue(meirei.process("$prefix$parentAlias $childBetaAlias"))
 
         // Cleanup
-        assertTrue(meirei.registry.removeSubCommand(childAlpha, parentId))
+        assertTrue(meirei.registry.removeSubCommand(childAlpha))
         assertTrue(meirei.registry.getSubCommandRegistry(parentId) != null)
-        assertTrue(meirei.registry.removeSubCommand(childBeta, parentId))
+        assertTrue(meirei.registry.removeSubCommand(childBeta))
         assertTrue(meirei.registry.deleteCommand(parentId))
         assertTrue(meirei.registry.getAllCommands().isEmpty())
         assertTrue(meirei.registry.getSubCommandRegistry(parentId) == null)
+        assertTrue(meirei.registry.getAllCommands().isEmpty())
     }
 
     @Test
     fun testAnnotatedCommands() {
         meirei.addAnnotatedCommands(AnnotatedCommand())
+        assertEquals(6, meirei.registry.getAllCommands().size)
 
         // Validate
         assertTrue(meirei.process("/parent 123"))
@@ -101,6 +103,17 @@ class CommandPackageTest {
         assertTrue(meirei.process("/parent child beta charlie"))
         assertTrue(meirei.process("/parent child third"))
         assertTrue(meirei.process("/parent child third fourth"))
+
+        // Cleanup - order shouldn't matter
+        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.child"))
+        assertFalse(meirei.registry.removeSubCommand("test.annotated.grouped.parent"))
+        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.beta"))
+        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.fourth"))
+        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.charlie"))
+        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.third"))
+        assertEquals(1, meirei.registry.getAllCommands().size)
+        assertTrue(meirei.registry.deleteCommand("test.annotated.grouped.parent"))
+        assertTrue(meirei.registry.getAllCommands().isEmpty())
     }
 
 }

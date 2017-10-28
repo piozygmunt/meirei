@@ -114,9 +114,10 @@ class CommandRegistryImpl : CommandRegistry() {
         }
     }
 
-    override fun removeSubCommand(subCommandId: CommandId, parentId: CommandId): Boolean {
-        val subCommandRegistry = parentIdSubCommandsMap[parentId] ?: return false
+    override fun removeSubCommand(subCommandId: CommandId): Boolean {
         val subCommandProperties = idPropertiesMap[subCommandId] ?: return false
+        if (subCommandProperties.parentId == CommandDefaults.PARENT_ID) return false
+        val subCommandRegistry = parentIdSubCommandsMap[subCommandProperties.parentId] ?: return false
 
         val success = subCommandRegistry.removeSubCommand(subCommandProperties)
         if (success) {
@@ -125,7 +126,7 @@ class CommandRegistryImpl : CommandRegistry() {
             idPropertiesMap.remove(subCommandId)
             idPropertiesMap.remove(subCommandId)
             if (subCommandRegistry.getAllSubCommandIds().isEmpty()) {
-                parentIdSubCommandsMap.remove(parentId)
+                parentIdSubCommandsMap.remove(subCommandProperties.parentId)
             }
             return true
         }
