@@ -20,7 +20,7 @@ import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
-@CommandGroup("test.annotated.grouped")
+@CommandGroup("test.annotated")
 class AnnotatedCommand {
 
     companion object {
@@ -33,7 +33,7 @@ class AnnotatedCommand {
         prefix = PREFIX
     )
     fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command alpha.").queue()
+        event.channel.sendMessage("This is annotated command alpha. args: ${context.args}").queue()
     }
 
     @Command(
@@ -42,7 +42,7 @@ class AnnotatedCommand {
         prefix = PREFIX
     )
     fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command beta.").queue()
+        event.channel.sendMessage("This is annotated command beta. args: ${context.args}").queue()
     }
 
 }
