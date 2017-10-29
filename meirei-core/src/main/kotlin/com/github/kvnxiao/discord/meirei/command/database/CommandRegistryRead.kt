@@ -34,7 +34,7 @@ interface CommandRegistryRead {
     // Get list of all commands
     fun getAllCommands(sortById: Boolean = true): List<CommandPackage>
     // Get list of all prefixed aliases
-    fun getAllCommandAliases(sorted: Boolean = true): List<String>
+    fun getAllCommandAliases(sorted: Boolean = true): List<CommandAlias>
 
     // Sub-command info
     fun hasSubCommands(parentId: String): Boolean

@@ -21,14 +21,19 @@ import com.github.kvnxiao.discord.meirei.utility.CommandId
 
 interface SubCommandRegistry {
 
+    // Get sub-command by its id
     fun getSubCommandIdByAlias(alias: CommandAlias): CommandId?
 
+    // Get list of all sub-command ids
     fun getAllSubCommandIds(sortById: Boolean = true): List<CommandId>
+    // Get list of all sub-command aliases
+    fun getAllSubCommandAliases(sorted: Boolean = true): List<CommandAlias>
 
+    // Adding and removing sub-commands
     fun addSubCommand(subCommandProperties: CommandProperties, parentId: CommandId): Boolean
-
     fun removeSubCommand(subCommandProperties: CommandProperties): Boolean
 
+    // Check if the registry is not empty
     fun containsCommands(): Boolean
 
 }

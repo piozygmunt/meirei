@@ -32,6 +32,10 @@ data class SubCommandRegistryImpl(
         return if (sortById) subCommandIds.sorted().toList() else subCommandIds.toList()
     }
 
+    override fun getAllSubCommandAliases(sorted: Boolean): List<CommandAlias> {
+        return if (sorted) aliasIdMap.keys.sorted().toList() else aliasIdMap.keys.toList()
+    }
+
     override fun addSubCommand(subCommandProperties: CommandProperties, parentId: CommandId): Boolean {
         // Validate aliases
         if (!validateAliases(subCommandProperties.aliases)) {
