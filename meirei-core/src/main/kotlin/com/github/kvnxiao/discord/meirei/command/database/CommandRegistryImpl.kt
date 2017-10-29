@@ -63,7 +63,7 @@ class CommandRegistryImpl : CommandRegistry() {
         idPropertiesMap.put(commandProperties.id, commandProperties)
         idPermissionsMap.put(commandProperties.id, permissionProperties)
 
-        Meirei.LOGGER.debug("Registered command '$command': prefix '${commandProperties.prefix}', aliases '${commandProperties.aliases}'")
+        Meirei.LOGGER.debug("Registered command '${command.id}': prefix '${commandProperties.prefix}', aliases '${commandProperties.aliases}'")
         return true
     }
 
