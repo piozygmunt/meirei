@@ -19,6 +19,7 @@ import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.command.CommandParserJDA
+import com.github.kvnxiao.discord.meirei.jda.command.DefaultErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.utility.NamedThreadFactory
@@ -36,7 +37,7 @@ import java.util.concurrent.Executors
 class MeireiJDA : Meirei(commandParser = CommandParserJDA()), EventListener {
 
     private var botOwnerId: Long = 0
-    private val errorHandler = ErrorHandler()
+    private val errorHandler: ErrorHandler = DefaultErrorHandler()
 
     companion object {
         const val DEFAULT_THREAD_COUNT = 2
@@ -88,7 +89,7 @@ class MeireiJDA : Meirei(commandParser = CommandParserJDA()), EventListener {
                 if (properties != null && permissions != null) {
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
-                        isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
+                            isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
                     Meirei.LOGGER.debug("Processing command: ${it.id}")
                     execute(it, context, event)
                 }
@@ -111,7 +112,7 @@ class MeireiJDA : Meirei(commandParser = CommandParserJDA()), EventListener {
                         if (subProperties != null && subPermissions != null) {
                             // Execute sub-command
                             val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
-                                context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
+                                    context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
                             // Execute parent-command if the boolean value is true
                             if (context.properties.execWithSubCommands) command.execute(context, event)
                             return execute(subCommand, subContext, event)

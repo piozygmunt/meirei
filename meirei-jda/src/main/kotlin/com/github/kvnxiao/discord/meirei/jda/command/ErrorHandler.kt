@@ -22,9 +22,9 @@ import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import java.util.EnumSet
 
-open class ErrorHandler {
+interface ErrorHandler {
 
-    open fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
+    fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
         Meirei.LOGGER.debug("Executing command '${context.properties.id}' ignored due to user ${event.author} being rate-limited")
         if (event.isFromType(ChannelType.PRIVATE)) {
             event.channel.sendMessage("Slow down, you're trying to execute the '${context.alias}' command too fast here.").queue()
@@ -35,14 +35,14 @@ open class ErrorHandler {
         }
     }
 
-    open fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permission>) {
+    fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permission>) {
         Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.id}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
         event.author.openPrivateChannel().queue {
             it.sendMessage("Sorry, you do not have permission to execute the **${context.alias}** command in **${event.guild.name} : ${event.channel.name}**.").queue()
         }
     }
 
-    open fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {
+    fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {
         Meirei.LOGGER.debug("Execution of command ${context.properties.id} ignored because the command does not allow direct messages.")
     }
 
