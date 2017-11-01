@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
         .setToken(token)
 
     // Add Meirei to JDA client
-    val meirei: Meirei = MeireiJDA()
+    val meirei: Meirei = MeireiJDA(builder)
 
     // Add command created through constructors
     val constructorCommandId = "test.constructor"
@@ -74,5 +74,5 @@ fun main(args: Array<String>) {
     )
 
     // Build client
-    builder.addEventListener(meirei).buildAsync()
+    builder.buildAsync()
 }

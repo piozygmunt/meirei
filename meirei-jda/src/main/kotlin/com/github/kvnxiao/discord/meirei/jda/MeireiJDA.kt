@@ -24,56 +24,74 @@ import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.utility.NamedThreadFactory
 import com.github.kvnxiao.discord.meirei.utility.splitString
+import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
 import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.EventListener
+import reactor.core.publisher.Flux
+import reactor.core.publisher.ofType
+import reactor.core.scheduler.Schedulers
 import java.util.EnumSet
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class MeireiJDA : Meirei(commandParser = CommandParserJDA()), EventListener {
+class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJDA()) {
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()
+    private val eventFlux: Flux<Event>
 
     companion object {
-        const val DEFAULT_THREAD_COUNT = 2
+        const val DEFAULT_THREAD_COUNT = 4
     }
 
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, NamedThreadFactory("MeireiExec"))
+    private val threadPool: ExecutorService = Executors.newFixedThreadPool(maxOf(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, DEFAULT_THREAD_COUNT), NamedThreadFactory("MeireiExec"))
 
-    override fun onEvent(event: Event) {
-        when (event) {
-            is MessageReceivedEvent -> onMessageReceived(event)
-            is ReadyEvent -> initialize(event)
+    init {
+        eventFlux = Flux.create {
+            jdaBuilder.addEventListener(EventListener { event -> it.next(event) })
         }
+
+        // Register message-received event listener
+        eventFlux.ofType<MessageReceivedEvent>()
+            .publishOn(Schedulers.fromExecutor(threadPool))
+            .doOnNext {
+                Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}")
+            }
+            .subscribe(this::consumeMessage)
+
+        // Register ready-event listener
+        eventFlux.ofType<ReadyEvent>()
+            .publishOn(Schedulers.fromExecutor(threadPool))
+            .take(1)
+            .subscribe(this::initialize)
     }
 
     private fun initialize(event: ReadyEvent) {
         // Set bot owner ID
         event.jda.asBot().applicationInfo.queue {
             botOwnerId = it.owner.idLong
+            Meirei.LOGGER.debug("Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}")
         }
     }
 
-    private fun onMessageReceived(event: MessageReceivedEvent) {
-        threadPool.submit {
-            val message = event.message
-            val rawContent = message.rawContent
-            val isPrivate = event.isFromType(ChannelType.PRIVATE)
+    private fun consumeMessage(event: MessageReceivedEvent) {
+        val message = event.message
+        val rawContent = message.rawContent
+        val isPrivate = event.isFromType(ChannelType.PRIVATE)
 
-            // Split to check for bot mention
-            val (firstStr, secondStr) = splitString(rawContent)
-            firstStr?.let {
-                // Check for bot mention
-                val hasBotMention = hasBotMention(it, message)
-                val content = if (hasBotMention) secondStr else rawContent
-                content?.let {
-                    process(content, event, isPrivate, hasBotMention)
-                }
+        // Split to check for bot mention
+        val (firstStr, secondStr) = splitString(rawContent)
+        firstStr?.let {
+            // Check for bot mention
+            val hasBotMention = hasBotMention(it, message)
+            val content = if (hasBotMention) secondStr else rawContent
+            content?.let {
+                // Process for command alias and arguments
+                process(content, event, isPrivate, hasBotMention)
             }
         }
     }

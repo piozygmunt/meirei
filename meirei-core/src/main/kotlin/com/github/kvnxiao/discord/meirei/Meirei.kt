@@ -24,8 +24,8 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 open class Meirei(
-    val registry: CommandRegistry = CommandRegistryImpl(),
-    val commandParser: AnnotationParser
+    protected val registry: CommandRegistry = CommandRegistryImpl(),
+    protected val commandParser: AnnotationParser
 ) {
 
     companion object {
