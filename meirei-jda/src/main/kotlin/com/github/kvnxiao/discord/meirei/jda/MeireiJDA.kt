@@ -39,7 +39,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()
-    private val scheduler: Scheduler = Schedulers.newParallel("MeireiExec")
+    private val scheduler: Scheduler = Schedulers.newParallel("MeireiExec-pool")
 
     init {
         // Register message-received event listener
@@ -75,11 +75,10 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
         firstStr?.let {
             // Check for bot mention
             val hasBotMention = hasBotMention(it, message)
+
+            // Process for command alias and arguments
             val content = if (hasBotMention) secondStr else rawContent
-            content?.let {
-                // Process for command alias and arguments
-                process(content, event, isPrivate, hasBotMention)
-            }
+            content?.let { process(it, event, isPrivate, hasBotMention) }
         }
     }
 
