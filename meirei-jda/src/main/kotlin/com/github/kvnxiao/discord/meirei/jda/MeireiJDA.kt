@@ -185,13 +185,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
         val userPerms = event.member.getPermissions(event.textChannel)
         requiredPerms.removeAll(userPerms)
 
-        var hasUserPerms = requiredPerms.isEmpty()
-
-        // Check if guild owner
-        hasUserPerms = hasUserPerms && (!permissions.data.reqGuildOwner || isGuildOwner)
-
-        // Check if bot owner
-        hasUserPerms = hasUserPerms && (!permissions.data.reqBotOwner || isBotOwner)
+        val hasUserPerms = requiredPerms.isEmpty() && (!permissions.data.reqGuildOwner || isGuildOwner) && (!permissions.data.reqBotOwner || isBotOwner)
 
         return if (hasUserPerms) {
             true
