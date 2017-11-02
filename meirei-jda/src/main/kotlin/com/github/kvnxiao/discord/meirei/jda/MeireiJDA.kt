@@ -22,55 +22,42 @@ import com.github.kvnxiao.discord.meirei.jda.command.CommandParserJDA
 import com.github.kvnxiao.discord.meirei.jda.command.DefaultErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
-import com.github.kvnxiao.discord.meirei.utility.NamedThreadFactory
 import com.github.kvnxiao.discord.meirei.utility.splitString
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
-import net.dv8tion.jda.core.events.Event
 import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.EventListener
 import reactor.core.publisher.Flux
-import reactor.core.publisher.ofType
+import reactor.core.publisher.Mono
+import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
 import java.util.EnumSet
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJDA()) {
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()
-    private val eventFlux: Flux<Event>
-
-    companion object {
-        const val DEFAULT_THREAD_COUNT = 4
-    }
-
-    private val threadPool: ExecutorService = Executors.newFixedThreadPool(maxOf(System.getProperty(Meirei.DEFAULT_THREAD_ENV_NAME)?.toIntOrNull() ?: DEFAULT_THREAD_COUNT, DEFAULT_THREAD_COUNT), NamedThreadFactory("MeireiExec"))
+    private val scheduler: Scheduler = Schedulers.newParallel("MeireiExec")
 
     init {
-        eventFlux = Flux.create {
-            jdaBuilder.addEventListener(EventListener { event -> it.next(event) })
-        }
-
         // Register message-received event listener
-        eventFlux.ofType<MessageReceivedEvent>()
-            .publishOn(Schedulers.fromExecutor(threadPool))
+        Flux.create<MessageReceivedEvent> {
+            jdaBuilder.addEventListener(EventListener { event -> if (event is MessageReceivedEvent) it.next(event) })
+        }.publishOn(scheduler)
             .doOnNext {
                 Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}")
             }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
-        eventFlux.ofType<ReadyEvent>()
-            .publishOn(Schedulers.fromExecutor(threadPool))
-            .take(1)
-            .subscribe(this::initialize)
+        Mono.create<ReadyEvent> {
+            jdaBuilder.addEventListener(EventListener { event -> if (event is ReadyEvent) it.success(event) })
+        }.publishOn(scheduler).doOnSuccess(this::setBotOwner).subscribe()
     }
 
-    private fun initialize(event: ReadyEvent) {
+    private fun setBotOwner(event: ReadyEvent) {
         // Set bot owner ID
         event.jda.asBot().applicationInfo.queue {
             botOwnerId = it.owner.idLong
@@ -107,7 +94,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
                 if (properties != null && permissions != null) {
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
-                            isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
+                        isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
                     Meirei.LOGGER.debug("Processing command: ${it.id}")
                     execute(it, context, event)
                 }
@@ -130,7 +117,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
                         if (subProperties != null && subPermissions != null) {
                             // Execute sub-command
                             val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
-                                    context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
+                                context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
                             // Execute parent-command if the boolean value is true
                             if (context.properties.execWithSubCommands) command.execute(context, event)
                             return execute(subCommand, subContext, event)
