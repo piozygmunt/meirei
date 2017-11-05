@@ -17,6 +17,7 @@ package com.github.kvnxiao.discord.meirei.tests
 
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import com.github.kvnxiao.discord.meirei.tests.annotated.AnnotatedCommand
@@ -28,8 +29,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CommandPackageTest {
-
-    private val meirei = MeireiTestImpl()
+    
+    private val registry = CommandRegistryImpl()
+    private val meirei = MeireiTestImpl(registry)
 
     @Test
     fun testRegistryAware() {
@@ -51,9 +53,9 @@ class CommandPackageTest {
         assertFalse(meirei.process("not a real command"))
 
         // Cleanup
-        assertTrue(meirei.registry.deleteCommand(id))
-        assertTrue(meirei.registry.deleteCommand(regAwareId))
-        assertTrue(meirei.registry.getAllCommands().isEmpty())
+        assertTrue(registry.deleteCommand(id))
+        assertTrue(registry.deleteCommand(regAwareId))
+        assertTrue(registry.getAllCommands().isEmpty())
     }
 
     @Test
@@ -74,7 +76,7 @@ class CommandPackageTest {
             CommandPackage(CommandImpl(childAlpha), CommandProperties(childAlpha, setOf(childAlphaAlias), prefix), PermissionProperties()),
             CommandPackage(CommandImpl(childBeta, true), CommandProperties(childBeta, setOf(childBetaAlias), prefix), PermissionProperties())
         )
-        assertEquals(3, meirei.registry.getAllCommands().size)
+        assertEquals(1, registry.getAllCommands().size)
 
         // Validate
         assertTrue(meirei.process("$prefix$parentAlias"))
@@ -82,19 +84,19 @@ class CommandPackageTest {
         assertTrue(meirei.process("$prefix$parentAlias $childBetaAlias"))
 
         // Cleanup
-        assertTrue(meirei.registry.removeSubCommand(childAlpha))
-        assertTrue(meirei.registry.getSubCommandRegistry(parentId) != null)
-        assertTrue(meirei.registry.removeSubCommand(childBeta))
-        assertTrue(meirei.registry.deleteCommand(parentId))
-        assertTrue(meirei.registry.getAllCommands().isEmpty())
-        assertTrue(meirei.registry.getSubCommandRegistry(parentId) == null)
-        assertTrue(meirei.registry.getAllCommands().isEmpty())
+        assertTrue(registry.removeSubCommand(childAlpha))
+        assertTrue(registry.getSubCommandRegistry(parentId) != null)
+        assertTrue(registry.removeSubCommand(childBeta))
+        assertTrue(registry.deleteCommand(parentId))
+        assertTrue(registry.getAllCommands().isEmpty())
+        assertTrue(registry.getSubCommandRegistry(parentId) == null)
+        assertTrue(registry.getAllCommands().isEmpty())
     }
 
     @Test
     fun testAnnotatedCommands() {
         meirei.addAnnotatedCommands(AnnotatedCommand())
-        assertEquals(6, meirei.registry.getAllCommands().size)
+        assertEquals(1, registry.getAllCommands().size)
 
         // Validate
         assertTrue(meirei.process("/parent 123"))
@@ -105,15 +107,15 @@ class CommandPackageTest {
         assertTrue(meirei.process("/parent child third fourth"))
 
         // Cleanup - order shouldn't matter
-        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.child"))
-        assertFalse(meirei.registry.removeSubCommand("test.annotated.grouped.parent"))
-        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.beta"))
-        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.fourth"))
-        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.charlie"))
-        assertTrue(meirei.registry.removeSubCommand("test.annotated.grouped.third"))
-        assertEquals(1, meirei.registry.getAllCommands().size)
-        assertTrue(meirei.registry.deleteCommand("test.annotated.grouped.parent"))
-        assertTrue(meirei.registry.getAllCommands().isEmpty())
+        assertTrue(registry.removeSubCommand("test.annotated.grouped.child"))
+        assertFalse(registry.removeSubCommand("test.annotated.grouped.parent"))
+        assertTrue(registry.removeSubCommand("test.annotated.grouped.beta"))
+        assertTrue(registry.removeSubCommand("test.annotated.grouped.fourth"))
+        assertTrue(registry.removeSubCommand("test.annotated.grouped.charlie"))
+        assertTrue(registry.removeSubCommand("test.annotated.grouped.third"))
+        assertEquals(1, registry.getAllCommands().size)
+        assertTrue(registry.deleteCommand("test.annotated.grouped.parent"))
+        assertTrue(registry.getAllCommands().isEmpty())
     }
 
 }

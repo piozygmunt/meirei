@@ -17,9 +17,10 @@ package com.github.kvnxiao.discord.meirei.tests.impl
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
 import com.github.kvnxiao.discord.meirei.utility.splitString
 
-class MeireiTestImpl : Meirei(commandParser = CommandParserImpl()) {
+class MeireiTestImpl(registry: CommandRegistry) : Meirei(registry, CommandParserImpl()) {
 
     fun process(input: String): Boolean {
         val (alias, args) = splitString(input)
