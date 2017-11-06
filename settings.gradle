@@ -2,3 +2,4 @@ rootProject.name = 'meirei'
 
 include 'meirei-core'
 include 'meirei-jda'
+include 'meirei-d4j'
