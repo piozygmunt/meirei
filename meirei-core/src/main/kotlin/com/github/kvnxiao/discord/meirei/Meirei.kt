@@ -23,7 +23,7 @@ import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-open class Meirei(
+abstract class Meirei(
     protected val registry: CommandRegistry = CommandRegistryImpl(),
     protected val commandParser: AnnotationParser
 ) {
