@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests
+package com.github.kvnxiao.discord.meirei.jda.tests
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
@@ -22,10 +22,10 @@ import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.jda.MeireiJDA
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
-import com.github.kvnxiao.discord.meirei.tests.annotated.AnnotatedCommand
-import com.github.kvnxiao.discord.meirei.tests.annotated.NestedAnnotatedCommand
-import com.github.kvnxiao.discord.meirei.tests.annotated.PermissionCommand
-import com.github.kvnxiao.discord.meirei.tests.annotated.RegistryAwareCommand
+import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand
+import com.github.kvnxiao.discord.meirei.jda.tests.annotated.NestedAnnotatedCommand
+import com.github.kvnxiao.discord.meirei.jda.tests.annotated.PermissionCommand
+import com.github.kvnxiao.discord.meirei.jda.tests.annotated.RegistryAwareCommand
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
