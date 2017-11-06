@@ -31,24 +31,21 @@ open class Meirei(
     companion object {
         @JvmStatic
         val LOGGER: Logger = LoggerFactory.getLogger(Meirei::class.java)
-
-        const val DEFAULT_JAR_ENV_NAME = "jarfolder"
-        const val DEFAULT_THREAD_ENV_NAME = "nthreads"
     }
 
-    fun addCommands(vararg commandPackages: CommandPackage) {
+    open fun addCommands(vararg commandPackages: CommandPackage) {
         commandPackages.forEach {
             registry.addCommand(it.command, it.commandProperties, it.permissionProperties)
         }
     }
 
-    fun addSubCommands(parentId: String, vararg commandPackage: CommandPackage) {
+    open fun addSubCommands(parentId: String, vararg commandPackage: CommandPackage) {
         commandPackage.forEach {
             registry.addSubCommand(it.command, it.commandProperties, it.permissionProperties, parentId)
         }
     }
 
-    fun addAnnotatedCommands(vararg instances: Any) {
+    open fun addAnnotatedCommands(vararg instances: Any) {
         instances.forEach {
             val relations = commandParser.parseAnnotations(it)
             relations.forEach {
@@ -58,7 +55,7 @@ open class Meirei(
         }
     }
 
-    private fun addNestedSubCommands(relation: CommandRelations) {
+    open protected fun addNestedSubCommands(relation: CommandRelations) {
         val subPkgs = relation.subPkgs
         if (subPkgs.isNotEmpty()) {
             subPkgs.forEach { subRelation ->
