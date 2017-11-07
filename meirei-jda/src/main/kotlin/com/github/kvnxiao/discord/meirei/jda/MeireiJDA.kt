@@ -46,15 +46,15 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
         Flux.create<MessageReceivedEvent> {
             jdaBuilder.addEventListener(EventListener { event -> if (event is MessageReceivedEvent) it.next(event) })
         }.publishOn(scheduler)
-            .doOnNext {
-                Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}")
-            }
+            .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}") }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
         Mono.create<ReadyEvent> {
             jdaBuilder.addEventListener(EventListener { event -> if (event is ReadyEvent) it.success(event) })
-        }.publishOn(scheduler).doOnSuccess(this::setBotOwner).subscribe()
+        }.publishOn(scheduler)
+            .doOnSuccess(this::setBotOwner)
+            .subscribe()
     }
 
     private fun setBotOwner(event: ReadyEvent) {

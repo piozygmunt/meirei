@@ -36,7 +36,7 @@ fun main(args: Array<String>) {
     val builder = JDABuilder(AccountType.BOT)
         .setToken(token)
 
-    // Add Meirei to JDA client
+    // Add Meirei to client builder
     val meirei: Meirei = MeireiJDA(builder)
 
     // Add command created through constructors
