@@ -68,3 +68,9 @@ See the [wiki](https://github.com/kvnxiao/meirei/wiki) for examples and more inf
 ## Roadmap
 
 TBD
+
+___
+
+While this project is in development (i.e. pre- 1.0.0 release), you may expect breaking changes made to the API. Any interest in contributing or helping out is greatly appreciated! You can find me on Discord at _alpha;helix#1222_ on the [Discord API Server](https://discordapp.com/invite/0SBTUU1wZTWPnGdJ) if you have any questions, suggestions, or helpful insights.
+
+_This project is licensed under the [Apache Software License 2.0](www.apache.org/licenses/LICENSE-2.0)_
