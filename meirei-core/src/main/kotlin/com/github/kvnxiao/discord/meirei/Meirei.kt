@@ -31,6 +31,7 @@ abstract class Meirei(
     companion object {
         @JvmStatic
         val LOGGER: Logger = LoggerFactory.getLogger(Meirei::class.java)
+        const val ENV_COMMAND_JAR_FOLDER = "ext_jar_folder"
     }
 
     open fun addCommands(vararg commandPackages: CommandPackage) {

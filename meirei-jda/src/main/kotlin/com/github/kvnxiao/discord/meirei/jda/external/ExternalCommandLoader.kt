@@ -23,7 +23,7 @@ import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 class ExternalCommandLoader {
 
     fun loadExternalCommands(): Pair<List<CommandJDA>, List<Class<*>>> {
-        val folder: String = System.getProperty(Meirei.DEFAULT_JAR_ENV_NAME) ?: "meirei/jars/"
+        val folder: String = System.getProperty(Meirei.ENV_COMMAND_JAR_FOLDER) ?: "meirei/jars/"
         val pair: Pair<MutableList<CommandJDA>, MutableList<Class<*>>> = Pair(mutableListOf(), mutableListOf())
         JarLoader().loadJarFiles(folder).forEach { k, v ->
             Meirei.LOGGER.debug("Loading $k for commands...")
