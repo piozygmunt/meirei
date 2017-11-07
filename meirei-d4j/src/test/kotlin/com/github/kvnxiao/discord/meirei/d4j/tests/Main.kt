@@ -20,7 +20,9 @@ import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.d4j.MeireiD4J
+import com.github.kvnxiao.discord.meirei.d4j.command.CommandBuilder
 import com.github.kvnxiao.discord.meirei.d4j.command.CommandD4J
+import com.github.kvnxiao.discord.meirei.d4j.command.build
 import com.github.kvnxiao.discord.meirei.d4j.permission.PermissionPropertiesD4J
 import com.github.kvnxiao.discord.meirei.d4j.sendBuffered
 import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.AnnotatedCommand
@@ -34,8 +36,7 @@ fun main(args: Array<String>) {
     val token = System.getenv("TEST_BOT_TOKEN")
     requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
     val client = ClientBuilder()
-        .withToken(token)
-        .build()
+        .withToken(token).build()
 
     // Add Meirei to discord client
     val meirei: Meirei = MeireiD4J(client)
@@ -50,9 +51,11 @@ fun main(args: Array<String>) {
     val constructorSubCommandId = "test.constructor.child"
     val subCommand = object : CommandD4J(constructorSubCommandId) {
         override fun execute(context: CommandContext, event: MessageReceivedEvent) {
-            event.channel.sendBuffered("This is a child command created through constructors")
+            event.channel.sendBuffered("This is a child command created using constructors.")
         }
     }
+
+    // Constructor-based command and sub-command
     meirei.addCommands(
         CommandPackage(
             command,
@@ -67,6 +70,14 @@ fun main(args: Array<String>) {
             PermissionPropertiesD4J()
         )
     )
+    // Builder-based command
+    meirei.addCommands(CommandBuilder("test.builder")
+        .aliases("builder")
+        .build { _, event ->
+            event.channel.sendBuffered("This command was created using a CommandBuilder class.")
+        }
+    )
+    // Add annotation-based commands
     meirei.addAnnotatedCommands(
         AnnotatedCommand(),
         NestedAnnotatedCommand(),

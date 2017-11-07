@@ -18,11 +18,11 @@ package com.github.kvnxiao.discord.meirei.jda.tests
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.impl.CommandImpl
 import com.github.kvnxiao.discord.meirei.jda.tests.impl.MeireiTestImpl
+import com.github.kvnxiao.discord.meirei.permission.PermissionData
+import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

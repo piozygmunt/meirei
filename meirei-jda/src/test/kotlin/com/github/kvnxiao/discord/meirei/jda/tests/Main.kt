@@ -20,7 +20,9 @@ import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.CommandProperties
 import com.github.kvnxiao.discord.meirei.jda.MeireiJDA
+import com.github.kvnxiao.discord.meirei.jda.command.CommandBuilder
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
+import com.github.kvnxiao.discord.meirei.jda.command.build
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.NestedAnnotatedCommand
@@ -49,9 +51,11 @@ fun main(args: Array<String>) {
     val constructorSubCommandId = "test.constructor.child"
     val subCommand = object : CommandJDA(constructorSubCommandId) {
         override fun execute(context: CommandContext, event: MessageReceivedEvent) {
-            event.channel.sendMessage("This is a child command created through constructors").queue()
+            event.channel.sendMessage("This is a child command created using constructors").queue()
         }
     }
+
+    // Constructor-based command and sub-command
     meirei.addCommands(
         CommandPackage(
             command,
@@ -66,6 +70,14 @@ fun main(args: Array<String>) {
             PermissionPropertiesJDA()
         )
     )
+    // Builder-based command
+    meirei.addCommands(CommandBuilder("test.builder")
+        .aliases("builder")
+        .build { _, event ->
+            event.channel.sendMessage("This command was created using a CommandBuilder class.").queue()
+        }
+    )
+    // Add annotation-based commands
     meirei.addAnnotatedCommands(
         AnnotatedCommand(),
         NestedAnnotatedCommand(),
@@ -73,6 +85,6 @@ fun main(args: Array<String>) {
         RegistryAwareCommand()
     )
 
-    // Build client
+    // Build client and log in to discord
     builder.buildAsync()
 }
