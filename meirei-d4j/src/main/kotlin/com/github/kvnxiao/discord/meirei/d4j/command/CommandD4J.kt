@@ -15,6 +15,7 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command
 
+import com.github.kvnxiao.discord.meirei.command.CommandDefaults
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import com.github.kvnxiao.discord.meirei.ratelimit.DiscordRateLimiter
@@ -24,7 +25,7 @@ import com.github.kvnxiao.discord.meirei.utility.UserId
 
 abstract class CommandD4J(
     final override val id: String,
-    final override val registryAware: Boolean = false
+    final override val registryAware: Boolean = CommandDefaults.IS_REGISTRY_AWARE
 ) : DiscordCommand(id, registryAware), CommandExecutable {
 
     private val rateLimitManager: DiscordRateLimiter = RateLimitManager(id)

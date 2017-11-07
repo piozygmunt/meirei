@@ -21,10 +21,6 @@ object CommandDefaults {
      */
     const val PARENT_ID = ""
     /**
-     * The default command package id, set as an empty string.
-     */
-    const val COMMAND_GROUP = ""
-    /**
      * The default command description, set as no description available.
      */
     const val NO_DESCRIPTION = "No description available."
@@ -44,4 +40,8 @@ object CommandDefaults {
      * The default setting for whether the command is disabled, set as false (commands default to enabled).
      */
     const val IS_DISABLED = false
+    /**
+     * The default setting for whether commands can read the command registry (default to false).
+     */
+    const val IS_REGISTRY_AWARE = false
 }
