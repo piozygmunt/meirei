@@ -13,14 +13,19 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests.impl
+package com.github.kvnxiao.discord.meirei.jda.tests.impl
 
-import com.github.kvnxiao.discord.meirei.annotations.parser.AnnotationParser
+import com.github.kvnxiao.discord.meirei.command.CommandContext
 import com.github.kvnxiao.discord.meirei.command.DiscordCommand
-import java.lang.reflect.Method
 
-class CommandParserImpl : AnnotationParser() {
+data class CommandImpl(
+    override val id: String,
+    override val registryAware: Boolean = false
+) : DiscordCommand(id, registryAware) {
 
-    override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand = CommandImpl(id, isRegistryAware)
+    fun execute(context: CommandContext): Boolean {
+        System.out.println("$id is executing with args: ${context.args}. registry=${context.readOnlyCommandRegistry}. parent=${context.properties.parentId}")
+        return registryAware == (context.readOnlyCommandRegistry != null)
+    }
 
 }

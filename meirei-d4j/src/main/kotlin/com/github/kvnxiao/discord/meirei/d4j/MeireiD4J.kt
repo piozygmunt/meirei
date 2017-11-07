@@ -58,7 +58,7 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
 
     private fun setBotOwner(event: ReadyEvent) {
         // Set bot owner ID
-        botOwnerId = event.client.ourUser.longID
+        botOwnerId = event.client.applicationOwner.longID
         Meirei.LOGGER.debug("Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}")
     }
 
@@ -139,7 +139,7 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
     }
 
     private fun hasBotMention(content: String, message: IMessage): Boolean {
-        return content == message.client.ourUser.mention() || content == message.client.ourUser.mention(true)
+        return content == message.client.ourUser.mention(false) || content == message.client.ourUser.mention(true)
     }
 
     // Validation

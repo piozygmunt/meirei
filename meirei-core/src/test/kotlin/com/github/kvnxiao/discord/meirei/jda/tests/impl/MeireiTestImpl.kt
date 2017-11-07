@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests.impl
+package com.github.kvnxiao.discord.meirei.jda.tests.impl
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext

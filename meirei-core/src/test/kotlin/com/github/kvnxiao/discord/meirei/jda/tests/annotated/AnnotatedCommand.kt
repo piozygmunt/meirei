@@ -13,7 +13,7 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.tests.annotated
+package com.github.kvnxiao.discord.meirei.jda.tests.annotated
 
 import com.github.kvnxiao.discord.meirei.annotations.Command
 import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
