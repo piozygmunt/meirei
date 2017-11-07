@@ -73,4 +73,7 @@ fun main(args: Array<String>) {
         PermissionCommand(),
         RegistryAwareCommand()
     )
+
+    // Log in to discord
+    client.login()
 }
