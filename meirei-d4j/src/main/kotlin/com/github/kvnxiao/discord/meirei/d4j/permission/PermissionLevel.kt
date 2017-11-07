@@ -17,7 +17,6 @@ package com.github.kvnxiao.discord.meirei.d4j.permission
 
 import sx.blah.discord.handle.obj.Permissions
 
-
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
 annotation class PermissionLevel(

@@ -13,14 +13,28 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.d4j.command
+package com.github.kvnxiao.discord.meirei.d4j.tests.annotated
 
+import com.github.kvnxiao.discord.meirei.annotations.Command
+import com.github.kvnxiao.discord.meirei.annotations.RegistryAware
 import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.d4j.sendBuffered
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
-@FunctionalInterface
-interface CommandExecutable {
+class RegistryAwareCommand {
 
-    fun execute(context: CommandContext, event: MessageReceivedEvent)
+    companion object {
+        const val PREFIX = "/"
+    }
+
+    @Command(
+        id = "registry",
+        aliases = arrayOf("registry"),
+        prefix = PREFIX
+    )
+    @RegistryAware
+    fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendBuffered("This is a registry aware command. all command aliases from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.command.id }}")
+    }
 
 }
