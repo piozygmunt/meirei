@@ -25,12 +25,17 @@ object PermissionDefaults {
     /**
      * The setting for whether the command can be activated through direct message to the bot, defaults to false.
      */
-    const val ALLOW_PRIVATE_MSGING = false
+    const val ALLOW_DIRECT_MSGING = false
+
+    /**
+     * The setting for whether the command must be activated through direct message with the bot, defaults to false.
+     */
+    const val FORCE_DIRECT_MSGING = false
 
     /**
      * The setting for whether the command replies are forced as a direct message, defaults to false.
      */
-    const val FORCE_PRIVATE_REPLY = false
+    const val FORCE_DIRECT_REPLY = false
 
     /**
      * The setting for whether the message used to activate the command should be removed post-activation, defaults to false.
@@ -61,5 +66,4 @@ object PermissionDefaults {
      * The setting for whether the command can only be issued by the bot owner, defaults to false.
      */
     const val REQUIRE_BOT_OWNER = false
-
 }

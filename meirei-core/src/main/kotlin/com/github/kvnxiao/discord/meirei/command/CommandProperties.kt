@@ -15,21 +15,20 @@
  */
 package com.github.kvnxiao.discord.meirei.command
 
+import com.github.kvnxiao.discord.meirei.utility.CommandAlias
+import com.github.kvnxiao.discord.meirei.utility.CommandId
+
 data class CommandProperties(
+    // Required properties for every command
+    val id: CommandId,
+    val aliases: Set<CommandAlias> = setOf(id),
     val prefix: String = CommandDefaults.PREFIX,
-    val uniqueName: String,
+    // Metadata
     val description: String = CommandDefaults.NO_DESCRIPTION,
     val usage: String = CommandDefaults.NO_USAGE,
+    // Command settings
     val execWithSubCommands: Boolean = CommandDefaults.EXEC_ALONGSIDE_SUBCOMMANDS,
     val isDisabled: Boolean = CommandDefaults.IS_DISABLED,
-    val aliases: Set<String> = setOf(uniqueName)) {
-
-    /**
-     * Overrided toString method returns the [uniqueName].
-     *
-     * @return[uniqueName] The command's unique name / identifier.
-     */
-    override fun toString(): String {
-        return this.uniqueName
-    }
-}
+    // Parent command id
+    val parentId: CommandId = CommandDefaults.PARENT_ID
+)

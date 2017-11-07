@@ -16,13 +16,14 @@
 package com.github.kvnxiao.discord.meirei.permission
 
 data class PermissionData(
-    val requireMention: Boolean = PermissionDefaults.REQUIRE_MENTION,
-    val allowPrivate: Boolean = PermissionDefaults.ALLOW_PRIVATE_MSGING,
-    val forcePrivateReply: Boolean = PermissionDefaults.FORCE_PRIVATE_REPLY,
+    val allowDmFromSender: Boolean = PermissionDefaults.ALLOW_DIRECT_MSGING,
+    val forceDmFromSender: Boolean = PermissionDefaults.FORCE_DIRECT_MSGING,
+    val forceDmReply: Boolean = PermissionDefaults.FORCE_DIRECT_REPLY,
     val removeCallMsg: Boolean = PermissionDefaults.REMOVE_CALL_MSG,
     val rateLimitPeriodInMs: Long = PermissionDefaults.RATE_LIMIT_PERIOD_MS,
     val tokensPerPeriod: Long = PermissionDefaults.TOKENS_PER_PERIOD,
     val rateLimitOnGuild: Boolean = PermissionDefaults.RATE_LIMIT_ON_GUILD,
     val reqGuildOwner: Boolean = PermissionDefaults.REQUIRE_GUILD_OWNER,
-    val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER
+    val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER,
+    val requireMention: Boolean = PermissionDefaults.REQUIRE_MENTION
 )

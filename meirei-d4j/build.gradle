@@ -1,0 +1,9 @@
+buildscript {
+    ext.d4j_version = '2.9.2'
+}
+
+dependencies {
+    compile project(":meirei-core")
+    compileOnly "com.github.austinv11:Discord4J:$d4j_version"
+    testCompileOnly "com.github.austinv11:Discord4J:$d4j_version"
+}

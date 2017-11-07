@@ -1,11 +1,9 @@
 buildscript {
-    ext.jda_version = '3.3.1_292'
-    ext.logback_version = '1.2.3'
+    ext.jda_version = '3.3.1_303'
 }
 
 dependencies {
     compile project(":meirei-core")
-    testCompile "ch.qos.logback:logback-classic:$logback_version"
     compileOnly "net.dv8tion:JDA:$jda_version"
     testCompileOnly "net.dv8tion:JDA:$jda_version"
 }

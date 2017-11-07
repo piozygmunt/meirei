@@ -16,11 +16,14 @@
 package com.github.kvnxiao.discord.meirei.command
 
 object CommandDefaults {
-
     /**
-     * The default parent name, set as an empty string.
+     * The default parent id, set as an empty string.
      */
-    const val PARENT_NAME = ""
+    const val PARENT_ID = ""
+    /**
+     * The default command package id, set as an empty string.
+     */
+    const val COMMAND_GROUP = ""
     /**
      * The default command description, set as no description available.
      */
@@ -41,5 +44,4 @@ object CommandDefaults {
      * The default setting for whether the command is disabled, set as false (commands default to enabled).
      */
     const val IS_DISABLED = false
-
 }
