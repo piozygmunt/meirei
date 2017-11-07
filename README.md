@@ -2,6 +2,7 @@
 
 [![CircleCI](https://circleci.com/gh/kvnxiao/meirei/tree/master.svg?style=shield)](https://circleci.com/gh/kvnxiao/meirei/tree/master)
 [![Release](https://jitpack.io/v/kvnxiao/meirei.svg)](https://jitpack.io/#kvnxiao/meirei)
+[![Apache License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 
 A simple and extensible command framework for JVM-based Discord API wrappers,
 supporting both [JDA](https://github.com/DV8FromTheWorld/JDA) and [Discord4J](https://github.com/austinv11/Discord4J).
