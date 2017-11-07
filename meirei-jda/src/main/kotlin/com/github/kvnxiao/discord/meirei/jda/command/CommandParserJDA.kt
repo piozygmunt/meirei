@@ -56,7 +56,8 @@ class CommandParserJDA : AnnotationParser() {
         return if (permissions != null) {
             PermissionPropertiesJDA(PermissionData(
                 requireMention = permissions.reqMention,
-                forceDmFromSender = permissions.forceDmReply,
+                forceDmFromSender = permissions.forceDm,
+                forceDmReply = permissions.forceDmReply,
                 allowDmFromSender = permissions.allowDm,
                 removeCallMsg = permissions.removeCallMsg,
                 rateLimitPeriodInMs = permissions.rateLimitPeriodMs,

@@ -56,7 +56,8 @@ class CommandParserD4J : AnnotationParser() {
         return if (permissions != null) {
             PermissionPropertiesD4J(PermissionData(
                 requireMention = permissions.reqMention,
-                forceDmFromSender = permissions.forceDmReply,
+                forceDmFromSender = permissions.forceDm,
+                forceDmReply = permissions.forceDmReply,
                 allowDmFromSender = permissions.allowDm,
                 removeCallMsg = permissions.removeCallMsg,
                 rateLimitPeriodInMs = permissions.rateLimitPeriodMs,
