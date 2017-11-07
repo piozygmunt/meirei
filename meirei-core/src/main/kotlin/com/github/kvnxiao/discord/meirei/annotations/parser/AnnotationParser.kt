@@ -103,7 +103,7 @@ abstract class AnnotationParser {
     protected fun Class<Any>.getCommandGroup(): CommandGroup? = if (this.isAnnotationPresent(CommandGroup::class.java)) this.getAnnotation(CommandGroup::class.java) else null
     protected fun appendGroup(id: String, commandGroup: CommandGroup?) = if (commandGroup != null) "${commandGroup.id}.$id" else id
 
-    open protected fun Command.createProperties(newId: String, newParentId: String): CommandProperties {
+    protected open fun Command.createProperties(newId: String, newParentId: String): CommandProperties {
         return CommandProperties(
             prefix = this.prefix,
             id = newId,
@@ -116,7 +116,7 @@ abstract class AnnotationParser {
         )
     }
 
-    open protected fun Method.createPermissionProperties(): PermissionProperties {
+    protected open fun Method.createPermissionProperties(): PermissionProperties {
         val permissions = this.getPermissions()
         return if (permissions != null) {
             PermissionProperties(PermissionData(
@@ -134,5 +134,4 @@ abstract class AnnotationParser {
             PermissionProperties()
         }
     }
-
 }

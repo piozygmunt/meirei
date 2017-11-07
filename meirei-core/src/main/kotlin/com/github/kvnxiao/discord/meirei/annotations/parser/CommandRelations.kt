@@ -27,5 +27,4 @@ data class CommandRelations(
             if (subPkgs.isNotEmpty()) "\n${"\t".repeat(depth + 1)}${subPkgs.joinToString(separator = "\n${"\t".repeat(depth + 1)}") { it.toTreeString(depth + 1) }}"
             else ""
     }
-
 }

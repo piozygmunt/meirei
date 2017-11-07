@@ -78,5 +78,4 @@ data class SubCommandRegistryImpl(
     private fun validateAliases(aliases: Set<String>): Boolean {
         return aliases.none { aliasIdMap.containsKey(it) }
     }
-
 }

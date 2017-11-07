@@ -45,5 +45,4 @@ class AnnotatedCommand {
     fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendBuffered("This is annotated command beta. args: ${context.args}")
     }
-
 }

@@ -64,10 +64,14 @@ subprojects {
 
     spotless {
         java {
+            trimTrailingWhitespace()
+            endWithNewline()
             licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
         }
         kotlin {
-            ktlint()
+            trimTrailingWhitespace()
+            endWithNewline()
+            ktlint("0.11.1")
             licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
         }
     }

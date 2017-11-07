@@ -27,5 +27,4 @@ data class CommandImpl(
         System.out.println("$id is executing with args: ${context.args}. registry=${context.readOnlyCommandRegistry}. parent=${context.properties.parentId}")
         return registryAware == (context.readOnlyCommandRegistry != null)
     }
-
 }

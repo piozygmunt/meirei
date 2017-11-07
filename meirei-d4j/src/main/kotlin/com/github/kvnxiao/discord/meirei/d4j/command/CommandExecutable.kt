@@ -22,5 +22,4 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 interface CommandExecutable {
 
     fun execute(context: CommandContext, event: MessageReceivedEvent)
-
 }

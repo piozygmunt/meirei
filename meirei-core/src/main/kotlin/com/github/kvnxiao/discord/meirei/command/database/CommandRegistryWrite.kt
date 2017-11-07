@@ -33,5 +33,4 @@ interface CommandRegistryWrite {
     // Sub-command linking
     fun addSubCommand(subCommand: DiscordCommand, commandProperties: CommandProperties, permissionProperties: PermissionProperties, parentId: CommandId): Boolean
     fun removeSubCommand(subCommandId: CommandId): Boolean
-
 }

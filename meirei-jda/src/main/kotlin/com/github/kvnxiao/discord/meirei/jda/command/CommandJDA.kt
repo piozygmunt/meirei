@@ -36,5 +36,4 @@ abstract class CommandJDA(
     fun isNotRateLimited(guildId: GuildId, userId: UserId, permissionData: PermissionData): Boolean {
         return rateLimitManager.isNotRateLimited(guildId, userId, permissionData)
     }
-
 }

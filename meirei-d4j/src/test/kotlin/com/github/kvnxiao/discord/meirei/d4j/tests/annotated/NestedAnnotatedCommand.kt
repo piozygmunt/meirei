@@ -56,5 +56,4 @@ class NestedAnnotatedCommand {
     fun commandCharlie(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendBuffered("This is the second child command of alpha and first child command of beta, charlie. args: ${context.args}")
     }
-
 }

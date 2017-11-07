@@ -22,5 +22,4 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 interface CommandExecutable {
 
     fun execute(context: CommandContext, event: MessageReceivedEvent)
-
 }

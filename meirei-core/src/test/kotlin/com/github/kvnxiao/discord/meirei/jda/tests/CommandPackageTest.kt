@@ -117,5 +117,4 @@ class CommandPackageTest {
         assertTrue(registry.deleteCommand("test.annotated.grouped.parent"))
         assertTrue(registry.getAllCommands().isEmpty())
     }
-
 }

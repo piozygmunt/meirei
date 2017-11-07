@@ -65,5 +65,4 @@ class AnnotatedCommand {
     )
     @RegistryAware
     fun charlie() = Unit
-
 }

@@ -69,5 +69,4 @@ class CommandParserJDA : AnnotationParser() {
             PermissionPropertiesJDA()
         }
     }
-
 }

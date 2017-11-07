@@ -39,5 +39,4 @@ interface CommandRegistryRead {
     // Sub-command info
     fun hasSubCommands(parentId: String): Boolean
     fun getSubCommandRegistry(parentId: String): SubCommandRegistry?
-
 }

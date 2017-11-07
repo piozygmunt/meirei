@@ -35,5 +35,4 @@ interface SubCommandRegistry {
 
     // Check if the registry is not empty
     fun containsCommands(): Boolean
-
 }

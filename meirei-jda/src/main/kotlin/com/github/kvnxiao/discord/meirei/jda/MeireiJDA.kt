@@ -193,5 +193,4 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
             false
         }
     }
-
 }

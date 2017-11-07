@@ -37,5 +37,4 @@ interface DiscordRateLimiter {
      * Checks if the specified user is rate limited on this command
      */
     fun isNotRateLimitedByUser(userId: UserId, permissions: PermissionData): Boolean
-
 }

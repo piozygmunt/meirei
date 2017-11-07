@@ -42,5 +42,4 @@ interface ErrorHandler {
     fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {
         Meirei.LOGGER.debug("Execution of command ${context.properties.id} ignored because the command does not allow direct messages.")
     }
-
 }

@@ -57,5 +57,4 @@ class PermissionCommand {
     fun commandMention(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("This is an annotated command that requires a mention to activate. args: ${context.args}").queue()
     }
-
 }

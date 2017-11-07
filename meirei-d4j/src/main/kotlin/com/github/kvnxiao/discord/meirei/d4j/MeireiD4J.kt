@@ -189,5 +189,4 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
             false
         }
     }
-
 }

@@ -69,5 +69,4 @@ class CommandParserD4J : AnnotationParser() {
             PermissionPropertiesD4J()
         }
     }
-
 }

@@ -56,7 +56,7 @@ abstract class Meirei(
         }
     }
 
-    open protected fun addNestedSubCommands(relation: CommandRelations) {
+    protected open fun addNestedSubCommands(relation: CommandRelations) {
         val subPkgs = relation.subPkgs
         if (subPkgs.isNotEmpty()) {
             subPkgs.forEach { subRelation ->
@@ -65,5 +65,4 @@ abstract class Meirei(
             }
         }
     }
-
 }

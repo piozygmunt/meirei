@@ -22,5 +22,4 @@ import java.lang.reflect.Method
 class CommandParserImpl : AnnotationParser() {
 
     override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand = CommandImpl(id, isRegistryAware)
-
 }

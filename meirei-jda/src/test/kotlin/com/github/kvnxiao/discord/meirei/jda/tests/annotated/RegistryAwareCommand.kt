@@ -35,5 +35,4 @@ class RegistryAwareCommand {
     fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("This is a registry aware command. all command aliases from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.command.id }}").queue()
     }
-
 }
