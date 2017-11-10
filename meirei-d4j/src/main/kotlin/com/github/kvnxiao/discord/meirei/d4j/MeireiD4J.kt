@@ -46,6 +46,7 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
             client.dispatcher.registerListener(IListener<MessageReceivedEvent> { event -> it.next(event) })
         }.publishOn(scheduler)
             .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.stringID} ${if (it.channel.isPrivate) "in direct message." else "in guild ${it.guild.stringID}"}") }
+            .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
@@ -53,6 +54,7 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
             client.dispatcher.registerListener(IListener<ReadyEvent> { event -> it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
+            .doOnError { Meirei.LOGGER.error("An error occurred in processing the ReadyEvent! $it") }
             .subscribe()
     }
 
@@ -91,7 +93,7 @@ class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
                         isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
-                    Meirei.LOGGER.debug("Processing command: ${it.id}")
+                    Meirei.LOGGER.debug("Evaluating input: $input")
                     execute(it, context, event)
                 }
             }

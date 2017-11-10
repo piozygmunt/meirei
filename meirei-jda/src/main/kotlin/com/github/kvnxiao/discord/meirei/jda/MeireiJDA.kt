@@ -47,6 +47,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
             jdaBuilder.addEventListener(EventListener { event -> if (event is MessageReceivedEvent) it.next(event) })
         }.publishOn(scheduler)
             .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}") }
+            .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
@@ -54,6 +55,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
             jdaBuilder.addEventListener(EventListener { event -> if (event is ReadyEvent) it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
+            .doOnError { Meirei.LOGGER.error("An error occurred in processing the ReadyEvent! $it") }
             .subscribe()
     }
 
@@ -94,7 +96,7 @@ class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJD
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
                         isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
-                    Meirei.LOGGER.debug("Processing command: ${it.id}")
+                    Meirei.LOGGER.debug("Evaluating input: $input")
                     execute(it, context, event)
                 }
             }
