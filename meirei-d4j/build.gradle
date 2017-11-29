@@ -3,7 +3,7 @@ buildscript {
 }
 
 dependencies {
-    compile project(":meirei-core")
+    implementation project(":meirei-core")
     compileOnly "com.github.austinv11:Discord4J:$d4j_version"
     testCompileOnly "com.github.austinv11:Discord4J:$d4j_version"
 }

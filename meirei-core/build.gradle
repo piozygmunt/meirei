@@ -4,6 +4,6 @@ buildscript {
 }
 
 dependencies {
-    compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
-    compile "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
+    implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
 }
