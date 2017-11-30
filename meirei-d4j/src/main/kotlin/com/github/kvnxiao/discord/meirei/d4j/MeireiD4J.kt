@@ -36,11 +36,13 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage
 import java.util.EnumSet
 
-class MeireiD4J(client: IDiscordClient, registry: CommandRegistry = CommandRegistryImpl()) : Meirei(commandParser = CommandParserD4J(), registry = registry) {
+class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(commandParser = CommandParserD4J(), registry = registry) {
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()
     private val scheduler: Scheduler = Schedulers.newParallel("MeireiExec-pool")
+
+    constructor(client: IDiscordClient) : this(client, CommandRegistryImpl())
 
     init {
         // Register message-received event listener
