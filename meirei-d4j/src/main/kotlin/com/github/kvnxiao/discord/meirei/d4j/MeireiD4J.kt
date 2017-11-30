@@ -17,6 +17,8 @@ package com.github.kvnxiao.discord.meirei.d4j
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
 import com.github.kvnxiao.discord.meirei.d4j.command.CommandD4J
 import com.github.kvnxiao.discord.meirei.d4j.command.CommandParserD4J
 import com.github.kvnxiao.discord.meirei.d4j.command.DefaultErrorHandler
@@ -34,7 +36,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.obj.IMessage
 import java.util.EnumSet
 
-class MeireiD4J(client: IDiscordClient) : Meirei(commandParser = CommandParserD4J()) {
+class MeireiD4J(client: IDiscordClient, registry: CommandRegistry = CommandRegistryImpl()) : Meirei(commandParser = CommandParserD4J(), registry = registry) {
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()

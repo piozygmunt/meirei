@@ -17,12 +17,14 @@ package com.github.kvnxiao.discord.meirei.jda
 
 import com.github.kvnxiao.discord.meirei.Meirei
 import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
 import com.github.kvnxiao.discord.meirei.jda.command.CommandParserJDA
 import com.github.kvnxiao.discord.meirei.jda.command.DefaultErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.utility.splitString
+import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
@@ -35,7 +37,7 @@ import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
 import java.util.EnumSet
 
-class MeireiJDA(jdaBuilder: JDABuilder) : Meirei(commandParser = CommandParserJDA()) {
+class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry = CommandRegistryImpl()) : Meirei(commandParser = CommandParserJDA(), registry = registry) {
 
     private var botOwnerId: Long = 0
     private val errorHandler: ErrorHandler = DefaultErrorHandler()
