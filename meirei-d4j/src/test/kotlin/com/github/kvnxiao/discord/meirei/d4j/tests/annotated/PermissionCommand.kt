@@ -31,7 +31,7 @@ class PermissionCommand {
 
     @Command(
         id = "alpha",
-        aliases = arrayOf("alpha"),
+        aliases = ["alpha"],
         prefix = PREFIX
     )
     @Permissions(reqBotOwner = true)
@@ -41,7 +41,7 @@ class PermissionCommand {
 
     @Command(
         id = "beta",
-        aliases = arrayOf("beta"),
+        aliases = ["beta"],
         prefix = PREFIX
     )
     @Permissions(reqGuildOwner = true)
@@ -51,7 +51,7 @@ class PermissionCommand {
 
     @Command(
         id = "mention",
-        aliases = arrayOf("mention"),
+        aliases = ["mention"],
         prefix = PREFIX
     )
     @Permissions(reqMention = true)

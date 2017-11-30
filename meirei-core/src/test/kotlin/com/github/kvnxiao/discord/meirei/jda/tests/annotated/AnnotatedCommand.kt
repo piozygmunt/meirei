@@ -24,7 +24,7 @@ class AnnotatedCommand {
 
     @Command(
         id = "parent",
-        aliases = arrayOf("parent"),
+        aliases = ["parent"],
         prefix = "/"
     )
     fun parent() = Unit
@@ -32,21 +32,21 @@ class AnnotatedCommand {
     @Command(
         id = "child",
         parentId = "parent",
-        aliases = arrayOf("child")
+        aliases = ["child"]
     )
     fun child() = Unit
 
     @Command(
         id = "third",
         parentId = "child",
-        aliases = arrayOf("third")
+        aliases = ["third"]
     )
     fun third() = Unit
 
     @Command(
         id = "fourth",
         parentId = "third",
-        aliases = arrayOf("fourth")
+        aliases = ["fourth"]
     )
     @RegistryAware
     fun fourth() = Unit
@@ -54,14 +54,14 @@ class AnnotatedCommand {
     @Command(
         id = "beta",
         parentId = "child",
-        aliases = arrayOf("beta")
+        aliases = ["beta"]
     )
     fun beta() = Unit
 
     @Command(
         id = "charlie",
         parentId = "beta",
-        aliases = arrayOf("charlie")
+        aliases = ["charlie"]
     )
     @RegistryAware
     fun charlie() = Unit

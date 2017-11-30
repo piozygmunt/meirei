@@ -29,7 +29,7 @@ class NestedAnnotatedCommand {
 
     @Command(
         id = "alpha",
-        aliases = arrayOf("alpha"),
+        aliases = ["alpha"],
         prefix = PREFIX
     )
     fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
@@ -38,7 +38,7 @@ class NestedAnnotatedCommand {
 
     @Command(
         id = "beta",
-        aliases = arrayOf("beta"),
+        aliases = ["beta"],
         prefix = PREFIX,
         parentId = "alpha"
     )
@@ -48,7 +48,7 @@ class NestedAnnotatedCommand {
 
     @Command(
         id = "charlie",
-        aliases = arrayOf("charlie"),
+        aliases = ["charlie"],
         prefix = PREFIX,
         parentId = "beta"
     )

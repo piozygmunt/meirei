@@ -29,7 +29,7 @@ class RegistryAwareCommand {
 
     @Command(
         id = "registry",
-        aliases = arrayOf("registry"),
+        aliases = ["registry"],
         prefix = PREFIX
     )
     @RegistryAware

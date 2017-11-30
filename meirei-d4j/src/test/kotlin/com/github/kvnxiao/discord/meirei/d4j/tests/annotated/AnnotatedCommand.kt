@@ -30,7 +30,7 @@ class AnnotatedCommand {
 
     @Command(
         id = "alpha",
-        aliases = arrayOf("alpha"),
+        aliases = ["alpha"],
         prefix = PREFIX
     )
     fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
@@ -39,7 +39,7 @@ class AnnotatedCommand {
 
     @Command(
         id = "beta",
-        aliases = arrayOf("beta"),
+        aliases = ["beta"],
         prefix = PREFIX
     )
     fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
