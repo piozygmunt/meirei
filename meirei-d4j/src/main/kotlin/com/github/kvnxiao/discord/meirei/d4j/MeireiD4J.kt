@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017 Ze Hao Xiao
+ *   Copyright (C) 2017-2018 Ze Hao Xiao
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
     init {
         // Register message-received event listener
         Flux.create<MessageReceivedEvent> {
-            client.dispatcher.registerListener(IListener<MessageReceivedEvent> { event -> it.next(event) })
+            client.dispatcher.registerListener({ event: MessageReceivedEvent -> it.next(event) })
         }.publishOn(scheduler)
             .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.stringID} ${if (it.channel.isPrivate) "in direct message." else "in guild ${it.guild.stringID}"}") }
             .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
@@ -55,7 +55,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
 
         // Register ready-event listener
         Mono.create<ReadyEvent> {
-            client.dispatcher.registerListener(IListener<ReadyEvent> { event -> it.success(event) })
+            client.dispatcher.registerListener({ event: ReadyEvent -> it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
             .doOnError { Meirei.LOGGER.error("An error occurred in processing the ReadyEvent! $it") }
@@ -172,8 +172,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         if (context.isDirectMessage) {
             if (!permissions.data.allowDmFromSender)
                 errorHandler.onDirectMessageInvalid(context, event)
-            else
-                return permissions.data.allowDmFromSender
+            else return permissions.data.allowDmFromSender
         }
 
         // Check if command requires to be guild owner

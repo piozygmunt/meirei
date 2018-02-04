@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017 Ze Hao Xiao
+ *   Copyright (C) 2017-2018 Ze Hao Xiao
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         Flux.create<MessageReceivedEvent> {
             jdaBuilder.addEventListener(EventListener { event -> if (event is MessageReceivedEvent) it.next(event) })
         }.publishOn(scheduler)
-            .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}") }
+            .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.contentRaw} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}") }
             .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
             .subscribe(this::consumeMessage)
 
@@ -73,7 +73,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
 
     private fun consumeMessage(event: MessageReceivedEvent) {
         val message = event.message
-        val rawContent = message.rawContent
+        val rawContent = message.contentRaw
         val isPrivate = event.isFromType(ChannelType.PRIVATE)
 
         // Split to check for bot mention
@@ -176,8 +176,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         if (context.isDirectMessage) {
             if (!permissions.data.allowDmFromSender)
                 errorHandler.onDirectMessageInvalid(context, event)
-            else
-                return permissions.data.allowDmFromSender
+            else return permissions.data.allowDmFromSender
         }
 
         // Check if command requires to be guild owner

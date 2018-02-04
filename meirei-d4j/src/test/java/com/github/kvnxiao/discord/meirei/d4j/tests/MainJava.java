@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017 Ze Hao Xiao
+ *   Copyright (C) 2017-2018 Ze Hao Xiao
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -41,9 +41,7 @@ public class MainJava {
         // Builder-based command
         meirei.addCommands(new CommandBuilder("test.builder")
                 .aliases("builder")
-                .build((context, event) -> {
-                    sendBuffered(event.getChannel(), "This command was created using a CommandBuilder class.");
-                })
+                .build((context, event) -> sendBuffered(event.getChannel(), "This command was created using a CommandBuilder class."))
         );
 
         // Log in to discord

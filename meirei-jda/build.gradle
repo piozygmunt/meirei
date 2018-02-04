@@ -1,5 +1,5 @@
 buildscript {
-    ext.jda_version = '3.3.1_307'
+    ext.jda_version = '3.5.0_334'
 }
 
 dependencies {

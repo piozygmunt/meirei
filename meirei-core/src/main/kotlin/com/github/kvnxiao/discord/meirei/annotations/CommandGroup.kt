@@ -1,5 +1,5 @@
 /*
- *   Copyright (C) 2017 Ze Hao Xiao
+ *   Copyright (C) 2017-2018 Ze Hao Xiao
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ package com.github.kvnxiao.discord.meirei.annotations
  * value.
  *
  * For example, a class named FooCommands annotated with @CommandGroup("foo"), and containing a command named "bar".
- * The id set for the "bar" command within its [CommandProperties] will be "foo.bar".
+ * The id set for the "bar" command within its [com.github.kvnxiao.discord.meirei.command.CommandProperties] will be "foo.bar".
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS)

@@ -1,5 +1,5 @@
 buildscript {
-    ext.d4j_version = '2.9.2'
+    ext.d4j_version = '2.9.3'
 }
 
 dependencies {
