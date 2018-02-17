@@ -44,26 +44,26 @@ class CommandRegistryImpl : CommandRegistry() {
     override fun addCommand(command: DiscordCommand, commandProperties: CommandProperties, permissionProperties: PermissionProperties): Boolean {
         // Check for prefix + alias clash and unique id clashes
         if (!validateAliases(commandProperties.prefix, commandProperties.aliases)) {
-            Meirei.LOGGER.warn("Could not register command '$command' with prefix '${commandProperties.prefix}' due to it clashing with existing aliases.")
+            Meirei.LOGGER.warn { "Could not register command '$command' with prefix '${commandProperties.prefix}' due to it clashing with existing aliases." }
             return false
         } else if (idExecutorMap.containsKey(commandProperties.id)) {
-            Meirei.LOGGER.warn("Could not register command '$command' with prefix '${commandProperties.prefix}' due to the unique id already existing in the registry.")
+            Meirei.LOGGER.warn { "Could not register command '$command' with prefix '${commandProperties.prefix}' due to the unique id already existing in the registry." }
             return false
         }
         // TODO: custom prefix validation
 
         // Insert command into alias->id map
         commandProperties.aliases.forEach {
-            aliasIdMap.put(commandProperties.prefix + it, commandProperties.id)
+            aliasIdMap[commandProperties.prefix + it] = commandProperties.id
         }
 
         // Insert command into id->executor map
-        idExecutorMap.put(commandProperties.id, command)
+        idExecutorMap[commandProperties.id] = command
         // Insert properties into id->prop map
-        idPropertiesMap.put(commandProperties.id, commandProperties)
-        idPermissionsMap.put(commandProperties.id, permissionProperties)
+        idPropertiesMap[commandProperties.id] = commandProperties
+        idPermissionsMap[commandProperties.id] = permissionProperties
 
-        Meirei.LOGGER.debug("Registered command '${command.id}': prefix '${commandProperties.prefix}', aliases '${commandProperties.aliases}'")
+        Meirei.LOGGER.debug { "Registered command '${command.id}': prefix '${commandProperties.prefix}', aliases '${commandProperties.aliases}'" }
         return true
     }
 
@@ -105,9 +105,9 @@ class CommandRegistryImpl : CommandRegistry() {
         val success = subCommandRegistry.addSubCommand(properties, parentId)
         return if (success) {
             // Add sub-command to main registry
-            idExecutorMap.put(properties.id, subCommand)
-            idPropertiesMap.put(properties.id, properties)
-            idPermissionsMap.put(properties.id, permissionProperties)
+            idExecutorMap[properties.id] = subCommand
+            idPropertiesMap[properties.id] = properties
+            idPermissionsMap[properties.id] = permissionProperties
             true
         } else {
             parentIdSubCommandsMap.remove(parentId)

@@ -55,6 +55,6 @@ abstract class CommandD4J(
     }
 
     override fun toString(): String {
-        return "CommandD4J(id='$id', registryAware=$registryAware)"
+        return "(id='$id', registryAware=$registryAware)"
     }
 }

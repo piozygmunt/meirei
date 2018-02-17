@@ -34,7 +34,7 @@ class MeireiTestImpl(registry: CommandRegistry) : Meirei(registry, CommandParser
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
                         readOnlyCommandRegistry = if (it.registryAware) registry else null)
-                    Meirei.LOGGER.debug("Processing command: ${it.id}")
+                    Meirei.LOGGER.debug { "Processing command: ${it.id}" }
                     return execute(it, context)
                 }
             }

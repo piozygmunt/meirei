@@ -26,7 +26,7 @@ class ExternalCommandLoader {
         val folder: String = System.getProperty(Meirei.ENV_COMMAND_JAR_FOLDER) ?: "meirei/jars/"
         val pair: Pair<MutableList<CommandJDA>, MutableList<Class<*>>> = Pair(mutableListOf(), mutableListOf())
         JarLoader().loadJarFiles(folder).forEach { k, v ->
-            Meirei.LOGGER.debug("Loading $k for commands...")
+            Meirei.LOGGER.debug { "Loading $k for commands..." }
             v.forEach {
                 try {
                     val classInstance: Class<*> = Class.forName(it)
@@ -54,9 +54,9 @@ class ExternalCommandLoader {
                 try {
                     return classInstance.newInstance() as CommandJDA
                 } catch (e: InstantiationException) {
-                    Meirei.LOGGER.error("External command class ${classInstance.simpleName} could not be instantiated with a no-args constructor!")
+                    Meirei.LOGGER.error { "External command class ${classInstance.simpleName} could not be instantiated with a no-args constructor!" }
                 } catch (e: IllegalAccessException) {
-                    Meirei.LOGGER.error("External command class ${classInstance.simpleName} could not be instantiated with a no-args constructor!")
+                    Meirei.LOGGER.error { "External command class ${classInstance.simpleName} could not be instantiated with a no-args constructor!" }
                 }
             }
         return null

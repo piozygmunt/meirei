@@ -39,21 +39,21 @@ data class SubCommandRegistryImpl(
     override fun addSubCommand(subCommandProperties: CommandProperties, parentId: CommandId): Boolean {
         // Validate aliases
         if (!validateAliases(subCommandProperties.aliases)) {
-            Meirei.LOGGER.warn("Could not register sub-command ${subCommandProperties.id} to $parentId due to it clashing with existing sub-command aliases.")
+            Meirei.LOGGER.warn { "Could not register sub-command ${subCommandProperties.id} to $parentId due to it clashing with existing sub-command aliases." }
             return false
         } else if (subCommandIds.contains(subCommandProperties.id)) {
-            Meirei.LOGGER.warn("Could not register sub-command ${subCommandProperties.id} to $parentId due to the unique id already existing in the sub-command registry.")
+            Meirei.LOGGER.warn { "Could not register sub-command ${subCommandProperties.id} to $parentId due to the unique id already existing in the sub-command registry." }
             return false
         }
 
         // Map all aliases of the sub-command to the sub-command id
         subCommandProperties.aliases.forEach {
-            aliasIdMap.put(it, subCommandProperties.id)
+            aliasIdMap[it] = subCommandProperties.id
         }
         // Add sub-command id to known set
         subCommandIds.add(subCommandProperties.id)
 
-        Meirei.LOGGER.debug("Registered sub-command '${subCommandProperties.id}' to '$parentId'")
+        Meirei.LOGGER.debug { "Registered sub-command '${subCommandProperties.id}' to '$parentId'" }
         return true
     }
 

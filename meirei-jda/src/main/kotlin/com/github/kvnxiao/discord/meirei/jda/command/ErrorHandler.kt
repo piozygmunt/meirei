@@ -25,7 +25,7 @@ import java.util.EnumSet
 interface ErrorHandler {
 
     fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
-        Meirei.LOGGER.debug("Executing command '${context.properties.id}' ignored due to user ${event.author} being rate-limited")
+        Meirei.LOGGER.debug { "Executing command '${context.properties.id}' ignored due to user ${event.author} being rate-limited" }
         if (event.isFromType(ChannelType.PRIVATE)) {
             event.channel.sendMessage("Slow down, you're trying to execute the '${context.alias}' command too fast here.").queue()
         } else {
@@ -36,13 +36,13 @@ interface ErrorHandler {
     }
 
     fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permission>) {
-        Meirei.LOGGER.debug("${event.author} can't execute command '${context.properties.id}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms")
+        Meirei.LOGGER.debug { "${event.author} can't execute command '${context.properties.id}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms" }
         event.author.openPrivateChannel().queue {
             it.sendMessage("Sorry, you do not have permission to execute the **${context.alias}** command in **${event.guild.name} : ${event.channel.name}**.").queue()
         }
     }
 
     fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {
-        Meirei.LOGGER.debug("Execution of command ${context.properties.id} ignored because the command does not allow direct messages.")
+        Meirei.LOGGER.debug { "Execution of command ${context.properties.id} ignored because the command does not allow direct messages." }
     }
 }

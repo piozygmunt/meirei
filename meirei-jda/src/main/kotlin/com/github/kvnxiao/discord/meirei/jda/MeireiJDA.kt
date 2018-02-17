@@ -50,8 +50,8 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         Flux.create<MessageReceivedEvent> {
             jdaBuilder.addEventListener(EventListener { event -> if (event is MessageReceivedEvent) it.next(event) })
         }.publishOn(scheduler)
-            .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.contentRaw} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}") }
-            .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
+            .doOnNext { Meirei.LOGGER.debug { "Received message ${it.message.contentRaw} from ${it.author.id} ${if (it.isFromType(ChannelType.PRIVATE)) "in direct message." else "in guild ${it.guild.id}"}" } }
+            .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing a MessageReceivedEvent!" } }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
@@ -59,7 +59,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
             jdaBuilder.addEventListener(EventListener { event -> if (event is ReadyEvent) it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
-            .doOnError { Meirei.LOGGER.error("An error occurred in processing the ReadyEvent! $it") }
+            .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing the ReadyEvent!" } }
             .subscribe()
     }
 
@@ -67,7 +67,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         // Set bot owner ID
         event.jda.asBot().applicationInfo.queue {
             botOwnerId = it.owner.idLong
-            Meirei.LOGGER.debug("Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}")
+            Meirei.LOGGER.debug { "Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}" }
         }
     }
 
@@ -100,7 +100,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
                         isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
-                    Meirei.LOGGER.debug("Evaluating input: $input")
+                    Meirei.LOGGER.debug { "Evaluating input for potential commands: $input" }
                     execute(it, context, event)
                 }
             }
@@ -144,9 +144,10 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         if (!validateRateLimits(command, context, event)) return false
 
         try {
+            Meirei.LOGGER.debug { "Executing command $command" }
             command.execute(context, event)
         } catch (e: Exception) {
-            Meirei.LOGGER.error("An error occurred in executing the command $command", e)
+            Meirei.LOGGER.error(e) { "An error occurred in executing the command $command" }
         }
         return true
     }

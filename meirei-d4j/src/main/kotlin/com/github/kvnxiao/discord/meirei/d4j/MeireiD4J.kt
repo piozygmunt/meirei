@@ -48,8 +48,8 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         Flux.create<MessageReceivedEvent> {
             client.dispatcher.registerListener({ event: MessageReceivedEvent -> it.next(event) })
         }.publishOn(scheduler)
-            .doOnNext { Meirei.LOGGER.debug("Received message ${it.message.content} from ${it.author.stringID} ${if (it.channel.isPrivate) "in direct message." else "in guild ${it.guild.stringID}"}") }
-            .doOnError { Meirei.LOGGER.error("An error occurred in processing a MessageReceivedEvent! $it") }
+            .doOnNext { Meirei.LOGGER.debug { "Received message ${it.message.content} from ${it.author.stringID} ${if (it.channel.isPrivate) "in direct message." else "in guild ${it.guild.stringID}"}" } }
+            .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing a MessageReceivedEvent!" } }
             .subscribe(this::consumeMessage)
 
         // Register ready-event listener
@@ -57,14 +57,14 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
             client.dispatcher.registerListener({ event: ReadyEvent -> it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
-            .doOnError { Meirei.LOGGER.error("An error occurred in processing the ReadyEvent! $it") }
+            .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing the ReadyEvent!" } }
             .subscribe()
     }
 
     private fun setBotOwner(event: ReadyEvent) {
         // Set bot owner ID
         botOwnerId = event.client.applicationOwner.longID
-        Meirei.LOGGER.debug("Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}")
+        Meirei.LOGGER.debug { "Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}" }
     }
 
     private fun consumeMessage(event: MessageReceivedEvent) {
@@ -96,7 +96,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
                     // Execute command
                     val context = CommandContext(alias, args, properties, permissions,
                         isDirectMsg, hasBotMention, if (it.registryAware) registry else null)
-                    Meirei.LOGGER.debug("Evaluating input: $input")
+                    Meirei.LOGGER.debug { "Evaluating input for potential commands: $input" }
                     execute(it, context, event)
                 }
             }
@@ -140,9 +140,10 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         if (!validateRateLimits(command, context, event)) return false
 
         try {
+            Meirei.LOGGER.debug { "Executing command $command" }
             command.execute(context, event)
         } catch (e: Exception) {
-            Meirei.LOGGER.error("An error occurred in executing the command $command", e)
+            Meirei.LOGGER.error(e) { "An error occurred in executing the command $command" }
         }
         return true
     }

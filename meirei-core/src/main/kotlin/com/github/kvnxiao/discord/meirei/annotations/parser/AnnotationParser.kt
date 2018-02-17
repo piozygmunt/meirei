@@ -57,7 +57,7 @@ abstract class AnnotationParser {
                 } else {
                     mainCommands.add(commandRelations)
                 }
-                commands.put(commandPackage.commandProperties.id, commandRelations)
+                commands[commandPackage.commandProperties.id] = commandRelations
             }
         }
 

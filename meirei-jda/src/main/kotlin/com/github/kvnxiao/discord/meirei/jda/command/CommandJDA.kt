@@ -55,6 +55,6 @@ abstract class CommandJDA(
     }
 
     override fun toString(): String {
-        return "CommandJDA(id='$id', registryAware=$registryAware)"
+        return "(id='$id', registryAware=$registryAware)"
     }
 }

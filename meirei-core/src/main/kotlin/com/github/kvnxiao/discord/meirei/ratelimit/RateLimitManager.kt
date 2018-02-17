@@ -70,7 +70,7 @@ class RateLimitManager(
     }
 
     private fun nullBucket(l: Long, isGuildLevel: Boolean): Bucket? {
-        Meirei.LOGGER.debug("Creating a new rate-limit bucket for ${if (isGuildLevel) "guild: $l" else "user: $l"} with command $id")
+        Meirei.LOGGER.debug { "Creating a new rate-limit bucket for ${if (isGuildLevel) "GUILD:$l" else "USER:$l"}, for command id='$id'" }
         return null
     }
 }

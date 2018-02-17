@@ -20,8 +20,7 @@ import com.github.kvnxiao.discord.meirei.annotations.parser.CommandRelations
 import com.github.kvnxiao.discord.meirei.command.CommandPackage
 import com.github.kvnxiao.discord.meirei.command.database.CommandRegistry
 import com.github.kvnxiao.discord.meirei.command.database.CommandRegistryImpl
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import mu.KotlinLogging
 
 abstract class Meirei(
     protected val registry: CommandRegistry = CommandRegistryImpl(),
@@ -30,7 +29,7 @@ abstract class Meirei(
 
     companion object {
         @JvmStatic
-        val LOGGER: Logger = LoggerFactory.getLogger(Meirei::class.java)
+        val LOGGER = KotlinLogging.logger(Meirei::class.java.name)
         const val ENV_COMMAND_JAR_FOLDER = "ext_jar_folder"
     }
 

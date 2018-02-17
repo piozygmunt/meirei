@@ -63,7 +63,7 @@ class JarLoader {
                     .toList()
             }
         } else {
-            Meirei.LOGGER.error("$file could not be loaded as an external jar dependency.")
+            Meirei.LOGGER.error { "$file could not be loaded as an external jar dependency." }
         }
         return emptyList()
     }
@@ -84,12 +84,12 @@ class JarLoader {
                 try {
                     mutableMap[it.fileName.toString()] = readJarFileForClasses(it.toFile())
                 } catch (e: IOException) {
-                    Meirei.LOGGER.error("Could not load '${it.fileName}' as a .jar file!")
+                    Meirei.LOGGER.error { "Could not load '${it.fileName}' as a .jar file!" }
                 }
             }
             return mutableMap.toMap()
         } catch (e: IOException) {
-            Meirei.LOGGER.error("Could not get list of .jar files when attempting to load external commands!")
+            Meirei.LOGGER.error { "Could not get list of .jar files when attempting to load external commands!" }
         }
         return emptyMap()
     }
