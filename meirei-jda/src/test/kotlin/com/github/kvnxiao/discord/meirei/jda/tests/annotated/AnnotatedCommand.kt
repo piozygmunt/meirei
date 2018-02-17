@@ -44,4 +44,13 @@ class AnnotatedCommand {
     fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("This is annotated command beta. args: ${context.args}").queue()
     }
+
+    @Command(
+        id = "asdf",
+        aliases = ["asdf"],
+        prefix = PREFIX
+    )
+    fun test(context: CommandContext, event: MessageReceivedEvent) {
+        throw RuntimeException("this is a runtime exception")
+    }
 }

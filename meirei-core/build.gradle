@@ -1,9 +1,24 @@
 buildscript {
-    ext.bucket4j_version = '3.1.0'
+    ext.bucket4j_version = '3.1.1'
     ext.caffeine_version = '2.6.1'
 }
 
 dependencies {
-    implementation "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
-    implementation "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+    compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
+    compile "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }

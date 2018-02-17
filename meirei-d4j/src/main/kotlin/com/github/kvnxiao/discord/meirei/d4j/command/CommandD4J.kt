@@ -37,4 +37,24 @@ abstract class CommandD4J(
     fun isNotRateLimited(guildId: GuildId, userId: UserId, permissionData: PermissionData): Boolean {
         return rateLimitManager.isNotRateLimited(guildId, userId, permissionData)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is CommandD4J) return false
+
+        if (id != other.id) return false
+        if (registryAware != other.registryAware) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id.hashCode()
+        result = 31 * result + registryAware.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        return "CommandD4J(id='$id', registryAware=$registryAware)"
+    }
 }

@@ -143,7 +143,11 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
-        command.execute(context, event)
+        try {
+            command.execute(context, event)
+        } catch (e: Exception) {
+            Meirei.LOGGER.error("An error occurred in executing the command $command", e)
+        }
         return true
     }
 

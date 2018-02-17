@@ -30,7 +30,6 @@ import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
 import sx.blah.discord.api.IDiscordClient
-import sx.blah.discord.api.events.IListener
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
@@ -140,7 +139,11 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
-        command.execute(context, event)
+        try {
+            command.execute(context, event)
+        } catch (e: Exception) {
+            Meirei.LOGGER.error("An error occurred in executing the command $command", e)
+        }
         return true
     }
 
