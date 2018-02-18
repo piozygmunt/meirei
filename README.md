@@ -9,9 +9,20 @@ supporting both [JDA](https://github.com/DV8FromTheWorld/JDA) and [Discord4J](ht
 
 _Documentation TBD_
 
+## Features
+
+- Easy command creation using **annotations**, constructors, and **builders**
+- **Sub-commands** as priority "arguments" of parent commands
+- **Permissions** for each command based on the Discord permission system
+- **Rate-limit** each command on a per _user_ or per _guild_ basis with customizable cooldowns
+- **Command context** for each command execution, including the ability to expose the command registry for reading (you can create your help commands this way!)
+- An open command registry interface so that **anyone can implement their own command store** (want to use SQL or NoSQL? go right ahead!)
+  - Comes with a basic command registry implementation already
+- Use it in Kotlin _or_ Java (or any other JVM language), it's up to you!
+
 ## Getting It
 
-Current release version: **0.8.2**. Requires Java 8 or higher to run. Replace `@VERSION@` with the release tag you want.
+Current release version: **0.8.5**. Requires Java 8 or higher to run. Replace `@VERSION@` with the release tag you want.
 
 ### Gradle
 
@@ -49,17 +60,6 @@ Current release version: **0.8.2**. Requires Java 8 or higher to run. Replace `@
     <version>@VERSION@</version>
 </dependency>
 ```
-
-## Features
-
-- Easy command creation using **annotations**, constructors, and **builders**
-- **Sub-commands** as priority "arguments" of parent commands
-- **Permissions** for each command based on the Discord permission system
-- **Rate-limit** each command on a per _user_ or per _guild_ basis with customizable cooldowns
-- **Command context** for each command execution, including the ability to expose the command registry for reading (you can create your help commands this way!)
-- An open command registry interface so that **anyone can implement their own command store** (want to use SQL or NoSQL? go right ahead!)
-  - Comes with a basic command registry implementation already
-- Use it in Kotlin _or_ Java (or any other JVM language), it's up to you!
 
 ## Getting Started
 
