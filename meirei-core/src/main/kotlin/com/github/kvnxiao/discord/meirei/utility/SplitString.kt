@@ -15,12 +15,42 @@
  */
 package com.github.kvnxiao.discord.meirei.utility
 
-fun splitString(content: String): SplitString {
-    val splitInput = StringSplitter.split(content, StringSplitter.SPACE_LITERAL, 2)
-    return SplitString(
-        if (splitInput.isNotEmpty()) splitInput[0] else null,
-        if (splitInput.size == 2) splitInput[1] else null
-    )
-}
+data class SplitString(val first: String, val second: String?, val delimiter: String = "") {
+    companion object {
+        private const val R: Char = '\r'
+        private const val N: Char = '\n'
+        private const val SPACE: Char = ' '
+        @JvmStatic
+        private val LINE_SEPARATOR: String = System.lineSeparator()
 
-data class SplitString(val first: String?, val second: String?)
+        @JvmStatic
+        fun splitString(content: String): SplitString {
+            var indexSpace = -1
+            var indexNewLine = -1
+            var nextIndex = -1
+            val max = content.length
+            for (i in 0 until max) {
+                when (content[i]) {
+                    R -> {
+                        indexNewLine = i
+                        nextIndex = i + 2
+                    }
+                    N -> {
+                        indexNewLine = i
+                        nextIndex = i + 1
+                    }
+                    SPACE -> {
+                        indexSpace = i
+                        nextIndex = i + 1
+                    }
+                }
+                if (indexSpace > -1) {
+                    return SplitString(content.substring(0, indexSpace), content.substring(nextIndex, max), SPACE.toString())
+                } else if (indexNewLine > -1) {
+                    return SplitString(content.substring(0, indexNewLine), content.substring(nextIndex, max), LINE_SEPARATOR)
+                }
+            }
+            return SplitString(content, null)
+        }
+    }
+}

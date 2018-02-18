@@ -23,7 +23,7 @@ buildscript {
 
 allprojects {
     group 'com.github.kvnxiao'
-    version '0.8.4'
+    version '0.8.5'
 
     task wrapper(type: Wrapper) {
         gradleVersion = '4.5.1'

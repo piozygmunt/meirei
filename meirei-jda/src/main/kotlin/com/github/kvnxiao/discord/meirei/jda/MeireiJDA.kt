@@ -24,7 +24,7 @@ import com.github.kvnxiao.discord.meirei.jda.command.CommandParserJDA
 import com.github.kvnxiao.discord.meirei.jda.command.DefaultErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
-import com.github.kvnxiao.discord.meirei.utility.splitString
+import com.github.kvnxiao.discord.meirei.utility.SplitString.Companion.splitString
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.ChannelType
 import net.dv8tion.jda.core.entities.Message
@@ -78,7 +78,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
 
         // Split to check for bot mention
         val (firstStr, secondStr) = splitString(rawContent)
-        firstStr?.let {
+        firstStr.let {
             // Check for bot mention
             val hasBotMention = hasBotMention(it, message)
 
@@ -91,7 +91,7 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
     private fun process(input: String, event: MessageReceivedEvent, isDirectMsg: Boolean, hasBotMention: Boolean) {
         val (alias, args) = splitString(input)
 
-        alias?.let {
+        alias.let {
             val command = registry.getCommandByAlias(it) as CommandJDA?
             command?.let {
                 val properties = registry.getPropertiesById(it.id)
@@ -114,19 +114,17 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
             if (args != null && registry.hasSubCommands(command.id)) {
                 // Try getting a sub-command from the args
                 val (subAlias, subArgs) = splitString(args)
-                if (subAlias != null) {
-                    val subCommand = registry.getSubCommandByAlias(subAlias, command.id) as CommandJDA?
-                    if (subCommand != null) {
-                        val subProperties = registry.getPropertiesById(subCommand.id)
-                        val subPermissions = registry.getPermissionsById(subCommand.id)
-                        if (subProperties != null && subPermissions != null) {
-                            // Execute sub-command
-                            val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
-                                context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
-                            // Execute parent-command if the boolean value is true
-                            if (context.properties.execWithSubCommands) command.execute(context, event)
-                            return execute(subCommand, subContext, event)
-                        }
+                val subCommand = registry.getSubCommandByAlias(subAlias, command.id) as CommandJDA?
+                if (subCommand != null) {
+                    val subProperties = registry.getPropertiesById(subCommand.id)
+                    val subPermissions = registry.getPermissionsById(subCommand.id)
+                    if (subProperties != null && subPermissions != null) {
+                        // Execute sub-command
+                        val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
+                            context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
+                        // Execute parent-command if the boolean value is true
+                        if (context.properties.execWithSubCommands) command.execute(context, event)
+                        return execute(subCommand, subContext, event)
                     }
                 }
             }

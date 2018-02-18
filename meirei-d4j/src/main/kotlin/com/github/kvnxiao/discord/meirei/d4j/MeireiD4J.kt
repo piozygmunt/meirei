@@ -24,7 +24,7 @@ import com.github.kvnxiao.discord.meirei.d4j.command.CommandParserD4J
 import com.github.kvnxiao.discord.meirei.d4j.command.DefaultErrorHandler
 import com.github.kvnxiao.discord.meirei.d4j.command.ErrorHandler
 import com.github.kvnxiao.discord.meirei.d4j.permission.PermissionPropertiesD4J
-import com.github.kvnxiao.discord.meirei.utility.splitString
+import com.github.kvnxiao.discord.meirei.utility.SplitString.Companion.splitString
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
@@ -74,7 +74,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
 
         // Split to check for bot mention
         val (firstStr, secondStr) = splitString(rawContent)
-        firstStr?.let {
+        firstStr.let {
             // Check for bot mention
             val hasBotMention = hasBotMention(it, message)
 
@@ -87,7 +87,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
     private fun process(input: String, event: MessageReceivedEvent, isDirectMsg: Boolean, hasBotMention: Boolean) {
         val (alias, args) = splitString(input)
 
-        alias?.let {
+        alias.let {
             val command = registry.getCommandByAlias(it) as CommandD4J?
             command?.let {
                 val properties = registry.getPropertiesById(it.id)
@@ -110,19 +110,17 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
             if (args != null && registry.hasSubCommands(command.id)) {
                 // Try getting a sub-command from the args
                 val (subAlias, subArgs) = splitString(args)
-                if (subAlias != null) {
-                    val subCommand = registry.getSubCommandByAlias(subAlias, command.id) as CommandD4J?
-                    if (subCommand != null) {
-                        val subProperties = registry.getPropertiesById(subCommand.id)
-                        val subPermissions = registry.getPermissionsById(subCommand.id)
-                        if (subProperties != null && subPermissions != null) {
-                            // Execute sub-command
-                            val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
-                                context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
-                            // Execute parent-command if the boolean value is true
-                            if (context.properties.execWithSubCommands) command.execute(context, event)
-                            return execute(subCommand, subContext, event)
-                        }
+                val subCommand = registry.getSubCommandByAlias(subAlias, command.id) as CommandD4J?
+                if (subCommand != null) {
+                    val subProperties = registry.getPropertiesById(subCommand.id)
+                    val subPermissions = registry.getPermissionsById(subCommand.id)
+                    if (subProperties != null && subPermissions != null) {
+                        // Execute sub-command
+                        val subContext = CommandContext(subAlias, subArgs, subProperties, subPermissions,
+                            context.isDirectMessage, context.hasBotMention, if (subCommand.registryAware) registry else null)
+                        // Execute parent-command if the boolean value is true
+                        if (context.properties.execWithSubCommands) command.execute(context, event)
+                        return execute(subCommand, subContext, event)
                     }
                 }
             }
