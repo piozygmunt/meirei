@@ -137,6 +137,11 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
+        // Remove call msg if set to true
+        if (context.permissions.data.removeCallMsg) {
+            event.message.delete()
+        }
+
         try {
             Meirei.LOGGER.debug { "Executing command $command" }
             command.execute(context, event)

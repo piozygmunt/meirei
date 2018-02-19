@@ -141,6 +141,11 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
         // Validate rate-limits
         if (!validateRateLimits(command, context, event)) return false
 
+        // Remove call msg if set to true
+        if (context.permissions.data.removeCallMsg) {
+            event.message.delete().reason("Command $command requires its message to be removed upon a successful call.").queue()
+        }
+
         try {
             Meirei.LOGGER.debug { "Executing command $command" }
             command.execute(context, event)
