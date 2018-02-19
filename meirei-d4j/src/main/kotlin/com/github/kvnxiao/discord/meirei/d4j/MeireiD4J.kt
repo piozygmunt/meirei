@@ -67,6 +67,13 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
         Meirei.LOGGER.debug { "Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}" }
     }
 
+    override fun registerEventListeners(client: Any) {
+        val dispatcher = (client as IDiscordClient).dispatcher
+        commandParser.commandEventListeners.values.forEach {
+            dispatcher.registerListener(it)
+        }
+    }
+
     private fun consumeMessage(event: MessageReceivedEvent) {
         val message = event.message
         val rawContent = message.content

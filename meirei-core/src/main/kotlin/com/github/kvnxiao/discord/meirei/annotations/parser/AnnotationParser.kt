@@ -30,6 +30,8 @@ import java.lang.reflect.Method
 
 abstract class AnnotationParser {
 
+    val commandEventListeners: MutableMap<CommandId, Any> = mutableMapOf()
+
     /**
      * Parse [Command] annotations in a class and returns a list of commands created from those annotations.
      *

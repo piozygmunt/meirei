@@ -24,6 +24,7 @@ import com.github.kvnxiao.discord.meirei.d4j.permission.PermissionLevel
 import com.github.kvnxiao.discord.meirei.d4j.permission.PermissionPropertiesD4J
 import com.github.kvnxiao.discord.meirei.permission.PermissionData
 import com.github.kvnxiao.discord.meirei.permission.PermissionProperties
+import sx.blah.discord.api.events.EventSubscriber
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.Permissions
 import java.lang.reflect.Method
@@ -32,6 +33,7 @@ import java.util.EnumSet
 class CommandParserD4J : AnnotationParser() {
 
     override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand {
+        if (instance.javaClass.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) } && !commandEventListeners.containsKey(id)) commandEventListeners[id] = instance
         return object : CommandD4J(id, method.isAnnotationPresent(RegistryAware::class.java)) {
             override fun execute(context: CommandContext, event: MessageReceivedEvent) {
                 method.invoke(instance, context, event)

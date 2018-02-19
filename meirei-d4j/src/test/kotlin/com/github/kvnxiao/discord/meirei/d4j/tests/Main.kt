@@ -28,6 +28,7 @@ import com.github.kvnxiao.discord.meirei.d4j.sendBuffered
 import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.NestedAnnotatedCommand
 import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.PermissionCommand
+import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.ReadyListenerCommand
 import com.github.kvnxiao.discord.meirei.d4j.tests.annotated.RegistryAwareCommand
 import sx.blah.discord.api.ClientBuilder
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
@@ -82,7 +83,8 @@ fun main(args: Array<String>) {
         AnnotatedCommand(),
         NestedAnnotatedCommand(),
         PermissionCommand(),
-        RegistryAwareCommand()
+        RegistryAwareCommand(),
+        ReadyListenerCommand()
     )
 
     // Log in to discord

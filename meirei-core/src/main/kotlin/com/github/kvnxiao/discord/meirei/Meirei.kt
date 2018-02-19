@@ -55,6 +55,8 @@ abstract class Meirei(
         }
     }
 
+    abstract fun registerEventListeners(client: Any)
+
     protected open fun addNestedSubCommands(relation: CommandRelations) {
         val subPkgs = relation.subPkgs
         if (subPkgs.isNotEmpty()) {

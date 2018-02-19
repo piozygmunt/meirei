@@ -27,6 +27,7 @@ import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.NestedAnnotatedCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.PermissionCommand
+import com.github.kvnxiao.discord.meirei.jda.tests.annotated.ReadyListenerCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.RegistryAwareCommand
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
@@ -82,7 +83,8 @@ fun main(args: Array<String>) {
         AnnotatedCommand(),
         NestedAnnotatedCommand(),
         PermissionCommand(),
-        RegistryAwareCommand()
+        RegistryAwareCommand(),
+        ReadyListenerCommand()
     )
 
     // Build client and log in to discord

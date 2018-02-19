@@ -64,10 +64,16 @@ class MeireiJDA(jdaBuilder: JDABuilder, registry: CommandRegistry) : Meirei(comm
     }
 
     private fun setBotOwner(event: ReadyEvent) {
-        // Set bot owner ID
         event.jda.asBot().applicationInfo.queue {
             botOwnerId = it.owner.idLong
             Meirei.LOGGER.debug { "Bot owner ID found: ${java.lang.Long.toUnsignedString(botOwnerId)}" }
+        }
+    }
+
+    override fun registerEventListeners(client: Any) {
+        val dispatcher = (client as JDABuilder)
+        commandParser.commandEventListeners.values.forEach {
+            dispatcher.addEventListener(it)
         }
     }
 
