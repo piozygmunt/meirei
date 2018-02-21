@@ -71,4 +71,6 @@ class MeireiTestImpl(registry: CommandRegistry) : Meirei(registry, CommandParser
     private fun executeCommand(command: CommandImpl, context: CommandContext): Boolean {
         return command.execute(context)
     }
+
+    override fun registerEventListeners(client: Any) = Unit
 }

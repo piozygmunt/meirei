@@ -33,7 +33,8 @@ import java.util.EnumSet
 class CommandParserJDA : AnnotationParser() {
 
     override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand {
-        if (instance is ListenerAdapter && !commandEventListeners.containsKey(id)) commandEventListeners[id] = instance
+        if (instance is ListenerAdapter)
+            commandEventListeners.putIfAbsent(instance::class.java.name, instance)
         return object : CommandJDA(id, method.isAnnotationPresent(RegistryAware::class.java)) {
             override fun execute(context: CommandContext, event: MessageReceivedEvent) {
                 method.invoke(instance, context, event)

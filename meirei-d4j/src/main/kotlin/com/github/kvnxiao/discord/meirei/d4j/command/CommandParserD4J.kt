@@ -33,7 +33,8 @@ import java.util.EnumSet
 class CommandParserD4J : AnnotationParser() {
 
     override fun createCommand(id: String, isRegistryAware: Boolean, method: Method, instance: Any): DiscordCommand {
-        if (instance.javaClass.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) } && !commandEventListeners.containsKey(id)) commandEventListeners[id] = instance
+        if (instance.javaClass.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) })
+            commandEventListeners.putIfAbsent(instance::class.java.name, instance)
         return object : CommandD4J(id, method.isAnnotationPresent(RegistryAware::class.java)) {
             override fun execute(context: CommandContext, event: MessageReceivedEvent) {
                 method.invoke(instance, context, event)
