@@ -30,6 +30,7 @@ import reactor.core.publisher.Mono
 import reactor.core.scheduler.Scheduler
 import reactor.core.scheduler.Schedulers
 import sx.blah.discord.api.IDiscordClient
+import sx.blah.discord.api.events.IListener
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.IMessage
@@ -46,7 +47,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
     init {
         // Register message-received event listener
         Flux.create<MessageReceivedEvent> {
-            client.dispatcher.registerListener({ event: MessageReceivedEvent -> it.next(event) })
+            client.dispatcher.registerListener(IListener { event: MessageReceivedEvent -> it.next(event) })
         }.publishOn(scheduler)
             .doOnNext { Meirei.LOGGER.debug { "Received message ${it.message.content} from ${it.author.stringID} ${if (it.channel.isPrivate) "in direct message." else "in guild ${it.guild.stringID}"}" } }
             .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing a MessageReceivedEvent!" } }
@@ -54,7 +55,7 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
 
         // Register ready-event listener
         Mono.create<ReadyEvent> {
-            client.dispatcher.registerListener({ event: ReadyEvent -> it.success(event) })
+            client.dispatcher.registerListener(IListener { event: ReadyEvent -> it.success(event) })
         }.publishOn(scheduler)
             .doOnSuccess(this::setBotOwner)
             .doOnError { Meirei.LOGGER.error(it) { "An error occurred in processing the ReadyEvent!" } }
