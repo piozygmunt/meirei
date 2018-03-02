@@ -15,28 +15,24 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests.annotated
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
+import com.github.kvnxiao.kommandant.command.annotations.Command
+import com.github.kvnxiao.kommandant.command.annotations.GroupId
+import com.github.kvnxiao.kommandant.command.annotations.Prefix
 import net.dv8tion.jda.core.events.ReadyEvent
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
 
-@CommandGroup("test.annotated.readylistener")
+@GroupId("test.annotated.readylistener")
+@Prefix("%")
 class ReadyListenerCommand : ListenerAdapter() {
-
-    companion object {
-        const val PREFIX = "%"
-    }
-
     override fun onReady(event: ReadyEvent) {
         println("READY!")
     }
 
     @Command(
         id = "ready",
-        aliases = ["ready"],
-        prefix = PREFIX
+        aliases = ["ready"]
     )
     fun test(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("READY should have been printed to the console").queue()

@@ -15,42 +15,55 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests.annotated
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
+import com.github.kvnxiao.kommandant.command.annotations.Command
+import com.github.kvnxiao.kommandant.command.annotations.GroupId
+import com.github.kvnxiao.kommandant.command.annotations.Prefix
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
-@CommandGroup("test.annotated.normal")
+@GroupId("test.annotated.normal")
+@Prefix("@")
 class AnnotatedCommand {
-
-    companion object {
-        const val PREFIX = "@"
+    @Command(
+        id = "annotated",
+        aliases = ["annotated", "ann"]
+    )
+    fun mainCommand(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendMessage("This is an annotated command. args: ${context.args}").queue()
     }
 
     @Command(
         id = "alpha",
-        aliases = ["alpha"],
-        prefix = PREFIX
+        aliases = ["alpha", "a"],
+        parentId = "annotated"
     )
     fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command alpha. args: ${context.args}").queue()
+        event.channel.sendMessage("A. args: ${context.args}").queue()
     }
 
     @Command(
         id = "beta",
-        aliases = ["beta"],
-        prefix = PREFIX
+        aliases = ["beta", "b"],
+        parentId = "alpha"
     )
     fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command beta. args: ${context.args}").queue()
+        event.channel.sendMessage("B. args: ${context.args}").queue()
     }
 
     @Command(
-        id = "asdf",
-        aliases = ["asdf"],
-        prefix = PREFIX
+        id = "charlie",
+        aliases = ["charlie", "c"],
+        parentId = "beta"
     )
-    fun test(context: CommandContext, event: MessageReceivedEvent) {
+    fun commandCharlie(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendMessage("C. args: ${context.args}").queue()
+    }
+
+    @Command(
+        id = "exception",
+        aliases = ["exception", "ex"]
+    )
+    fun exception(context: CommandContext, event: MessageReceivedEvent) {
         throw RuntimeException("this is a runtime exception")
     }
 }

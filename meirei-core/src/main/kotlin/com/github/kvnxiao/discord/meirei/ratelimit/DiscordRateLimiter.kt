@@ -15,26 +15,24 @@
  */
 package com.github.kvnxiao.discord.meirei.ratelimit
 
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.utility.GuildId
-import com.github.kvnxiao.discord.meirei.utility.UserId
+import com.github.kvnxiao.discord.meirei.command.permission.PermissionProperties
 
 interface DiscordRateLimiter {
 
     /**
      * Checks if the command is rate limited
      */
-    fun isNotRateLimited(guildId: GuildId, userId: UserId, permissions: PermissionData): Boolean
+    fun isNotRateLimited(guildId: Long, userId: Long, permissions: PermissionProperties): Boolean
 
     /**
      * Rate limit level: per guild basis
      * Checks if the command is rate-limited on a guild level for all users
      */
-    fun isNotRateLimitedByGuild(guildId: GuildId, permissions: PermissionData): Boolean
+    fun isNotRateLimitedByGuild(guildId: Long, permissions: PermissionProperties): Boolean
 
     /**
      * Rate limit level: per user basis
      * Checks if the specified user is rate limited on this command
      */
-    fun isNotRateLimitedByUser(userId: UserId, permissions: PermissionData): Boolean
+    fun isNotRateLimitedByUser(userId: Long, permissions: PermissionProperties): Boolean
 }

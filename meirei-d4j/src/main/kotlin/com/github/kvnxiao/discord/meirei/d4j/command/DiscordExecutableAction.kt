@@ -15,9 +15,18 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command
 
+import com.github.kvnxiao.kommandant.command.Context
+import com.github.kvnxiao.kommandant.command.ExecutableAction
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
-@FunctionalInterface
-interface CommandExecutable {
-    fun execute(context: CommandContext, event: MessageReceivedEvent)
+/**
+ * The Discord specific executable action for Discord commands, which contains the command context and the message
+ * received event.
+ */
+interface DiscordExecutableAction<out T> : ExecutableAction<T> {
+    fun execute(context: CommandContext, event: MessageReceivedEvent): T
+
+    override fun execute(context: Context, opt: Array<Any>?): T {
+        return execute(context as CommandContext, opt!![0] as MessageReceivedEvent)
+    }
 }

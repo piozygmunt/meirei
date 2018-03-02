@@ -15,20 +15,18 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests
 
-import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.command.CommandContext
-import com.github.kvnxiao.discord.meirei.command.CommandPackage
-import com.github.kvnxiao.discord.meirei.command.CommandProperties
-import com.github.kvnxiao.discord.meirei.jda.MeireiJDA
-import com.github.kvnxiao.discord.meirei.jda.command.CommandBuilder
+import com.github.kvnxiao.discord.meirei.command.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.jda.Meirei
+import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
 import com.github.kvnxiao.discord.meirei.jda.command.CommandJDA
-import com.github.kvnxiao.discord.meirei.jda.command.build
-import com.github.kvnxiao.discord.meirei.jda.permission.PermissionPropertiesJDA
+import com.github.kvnxiao.discord.meirei.jda.command.DefaultErrorHandler
+import com.github.kvnxiao.discord.meirei.jda.command.DiscordExecutableAction
+import com.github.kvnxiao.discord.meirei.jda.command.permission.PermissionLevelDefaults
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand
-import com.github.kvnxiao.discord.meirei.jda.tests.annotated.NestedAnnotatedCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.PermissionCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.ReadyListenerCommand
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.RegistryAwareCommand
+import com.github.kvnxiao.kommandant.command.CommandProperties
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
@@ -40,48 +38,34 @@ fun main(args: Array<String>) {
         .setToken(token)
 
     // Add Meirei to client builder
-    val meirei: Meirei = MeireiJDA(builder)
+    val meirei = Meirei(builder)
 
     // Add command created through constructors
-    val constructorCommandId = "test.constructor"
-    val command = object : CommandJDA(constructorCommandId) {
+    val command = CommandJDA(object : DiscordExecutableAction<Unit> {
         override fun execute(context: CommandContext, event: MessageReceivedEvent) {
             event.channel.sendMessage("This is a command created using constructors.").queue()
         }
-    }
-    val constructorSubCommandId = "test.constructor.child"
-    val subCommand = object : CommandJDA(constructorSubCommandId) {
+    }, CommandProperties("test.constructor", aliases = setOf("constructor", "c"), prefix = "!"),
+        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW, false)
+    val subCommand = CommandJDA(object : DiscordExecutableAction<Unit> {
         override fun execute(context: CommandContext, event: MessageReceivedEvent) {
-            event.channel.sendMessage("This is a child command created using constructors").queue()
+            event.channel.sendMessage("This is a sub-command created using constructors.").queue()
         }
-    }
+    }, CommandProperties("test.constructor.child", aliases = setOf("sub", "s"), parentId = "test.constructor"),
+        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW, false)
 
-    // Constructor-based command and sub-command
-    meirei.addCommands(
-        CommandPackage(
-            command,
-            CommandProperties(constructorCommandId, aliases = setOf("constructor", "cons"), execWithSubCommands = true),
-            PermissionPropertiesJDA()
-        )
-    )
-    meirei.addSubCommands(constructorCommandId,
-        CommandPackage(
-            subCommand,
-            CommandProperties(constructorSubCommandId, aliases = setOf("child")),
-            PermissionPropertiesJDA()
-        )
-    )
-    // Builder-based command
-    meirei.addCommands(CommandBuilder("test.builder")
-        .aliases("builder")
-        .build { _, event ->
-            event.channel.sendMessage("This command was created using a CommandBuilder class.").queue()
-        }
-    )
+    meirei.addCommand(command)
+    meirei.addSubCommand(subCommand, command.properties.id)
+//    // Builder-based command
+//    meirei.addCommands(CommandBuilder("test.builder")
+//        .aliases("builder")
+//        .build { _, event ->
+//            event.channel.sendMessage("This command was created using a CommandBuilder class.").queue()
+//        }
+//    )
     // Add annotation-based commands
     meirei.addAnnotatedCommands(
         AnnotatedCommand(),
-        NestedAnnotatedCommand(),
         PermissionCommand(),
         RegistryAwareCommand(),
         ReadyListenerCommand()

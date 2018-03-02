@@ -17,32 +17,32 @@ package com.github.kvnxiao.discord.meirei.ratelimit
 
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
-import com.github.kvnxiao.discord.meirei.Meirei
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.utility.GuildId
-import com.github.kvnxiao.discord.meirei.utility.UserId
+import com.github.kvnxiao.discord.meirei.command.permission.PermissionProperties
 import io.github.bucket4j.Bandwidth
 import io.github.bucket4j.Bucket
 import io.github.bucket4j.Bucket4j
+import mu.KotlinLogging
 import java.util.concurrent.TimeUnit
 
+private val LOGGER = KotlinLogging.logger { }
+
 class RateLimitManager(
-    private val id: String
+    private val commandId: String
 ) : DiscordRateLimiter {
 
     // Map of user id to bucket
-    private val userManager: Cache<UserId, Bucket> = Caffeine.newBuilder()
+    private val userManager: Cache<Long, Bucket> = Caffeine.newBuilder()
         .expireAfterAccess(3, TimeUnit.MINUTES)
         .expireAfterWrite(3, TimeUnit.MINUTES)
         .build()
 
     // Map of guildId to bucket
-    private val guildManager: Cache<GuildId, Bucket> = Caffeine.newBuilder()
+    private val guildManager: Cache<Long, Bucket> = Caffeine.newBuilder()
         .expireAfterAccess(5, TimeUnit.MINUTES)
         .expireAfterWrite(5, TimeUnit.MINUTES)
         .build()
 
-    override fun isNotRateLimited(guildId: GuildId, userId: UserId, permissions: PermissionData): Boolean {
+    override fun isNotRateLimited(guildId: Long, userId: Long, permissions: PermissionProperties): Boolean {
         return if (permissions.rateLimitOnGuild) {
             isNotRateLimitedByGuild(guildId, permissions)
         } else {
@@ -50,15 +50,15 @@ class RateLimitManager(
         }
     }
 
-    override fun isNotRateLimitedByGuild(guildId: GuildId, permissions: PermissionData): Boolean {
+    override fun isNotRateLimitedByGuild(guildId: Long, permissions: PermissionProperties): Boolean {
         return guildManager.getOrCreateBucket(guildId, permissions, true).tryConsume(1)
     }
 
-    override fun isNotRateLimitedByUser(userId: UserId, permissions: PermissionData): Boolean {
+    override fun isNotRateLimitedByUser(userId: Long, permissions: PermissionProperties): Boolean {
         return userManager.getOrCreateBucket(userId, permissions, false).tryConsume(1)
     }
 
-    private fun Cache<Long, Bucket>.getOrCreateBucket(id: Long, perms: PermissionData, isGuildLevel: Boolean): Bucket {
+    private fun Cache<Long, Bucket>.getOrCreateBucket(id: Long, perms: PermissionProperties, isGuildLevel: Boolean): Bucket {
         val bucket = this.get(id, { nullBucket(it, isGuildLevel) })
         return if (bucket != null) {
             bucket
@@ -70,7 +70,7 @@ class RateLimitManager(
     }
 
     private fun nullBucket(l: Long, isGuildLevel: Boolean): Bucket? {
-        Meirei.LOGGER.debug { "Creating a new rate-limit bucket for ${if (isGuildLevel) "GUILD:$l" else "USER:$l"}, for command id='$id'" }
+        LOGGER.debug { "Creating a new rate-limit bucket for ${if (isGuildLevel) "GUILD:$l" else "USER:$l"}, for command commandId='$commandId'" }
         return null
     }
 }

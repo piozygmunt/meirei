@@ -13,11 +13,11 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.d4j.command
+package com.github.kvnxiao.discord.meirei.command.errors
 
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
-
-@FunctionalInterface
-interface CommandExecutable {
-    fun execute(context: CommandContext, event: MessageReceivedEvent)
+class PermissionValidationError(msg: String) : Exception(msg) {
+    // Do not fill in stack trace
+    override fun fillInStackTrace(): Throwable {
+        return this
+    }
 }

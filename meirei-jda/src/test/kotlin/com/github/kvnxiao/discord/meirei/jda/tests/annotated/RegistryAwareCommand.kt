@@ -15,24 +15,20 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests.annotated
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.RegistryAware
-import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.annotations.RegistryAware
+import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
+import com.github.kvnxiao.kommandant.command.annotations.Command
+import com.github.kvnxiao.kommandant.command.annotations.Prefix
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
+@Prefix("/")
 class RegistryAwareCommand {
-
-    companion object {
-        const val PREFIX = "/"
-    }
-
     @Command(
         id = "registry",
-        aliases = ["registry"],
-        prefix = PREFIX
+        aliases = ["registry"]
     )
     @RegistryAware
-    fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is a registry aware command. all command aliases from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.command.id }}").queue()
+    fun registryCommand(context: CommandContext, event: MessageReceivedEvent) {
+        event.channel.sendMessage("This is a registry aware command. all command ids from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.properties.id }}").queue()
     }
 }

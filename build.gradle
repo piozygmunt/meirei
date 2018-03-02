@@ -1,12 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.2.21'
+    ext.kotlin_version = '1.2.30'
     ext.dokka_version = '0.9.15'
     ext.shadow_version = '1.2.4'
     ext.junit_version = '4.12'
     ext.spotless_version = '3.8.0'
     ext.slf4j_version = '1.7.25'
     ext.logback_version = '1.2.3'
-    ext.reactor_version = '3.1.4.RELEASE'
     ext.kotlin_logging_version = '1.4.9'
 
     repositories {
@@ -23,7 +22,7 @@ buildscript {
 
 allprojects {
     group 'com.github.kvnxiao'
-    version '0.8.6'
+    version '0.9.0'
 
     task wrapper(type: Wrapper) {
         gradleVersion = '4.5.1'
@@ -50,7 +49,6 @@ subprojects {
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
         implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
         implementation "org.slf4j:slf4j-api:$slf4j_version"
-        implementation "io.projectreactor:reactor-core:$reactor_version"
         implementation "io.github.microutils:kotlin-logging:$kotlin_logging_version"
         testImplementation "org.slf4j:slf4j-api:$slf4j_version"
         testImplementation "ch.qos.logback:logback-classic:$logback_version"
@@ -68,13 +66,13 @@ subprojects {
         java {
             trimTrailingWhitespace()
             endWithNewline()
-            licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
+            licenseHeaderFile "${rootProject.projectDir}/LICENSE_HEADER"
         }
         kotlin {
             trimTrailingWhitespace()
             endWithNewline()
-            ktlint("0.15.0")
-            licenseHeaderFile "${rootProject.projectDir}/docs/license_header"
+            ktlint("0.15.1")
+            licenseHeaderFile "${rootProject.projectDir}/LICENSE_HEADER"
         }
     }
 }

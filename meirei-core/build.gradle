@@ -1,11 +1,13 @@
 buildscript {
     ext.bucket4j_version = '3.1.1'
     ext.caffeine_version = '2.6.1'
+    ext.kommandant_version = 'b9ca169'
 }
 
 dependencies {
     compile "com.github.vladimir-bukhtoyarov:bucket4j-core:$bucket4j_version"
     compile "com.github.ben-manes.caffeine:caffeine:$caffeine_version"
+    compile "com.github.kvnxiao:kommandant:$kommandant_version"
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {

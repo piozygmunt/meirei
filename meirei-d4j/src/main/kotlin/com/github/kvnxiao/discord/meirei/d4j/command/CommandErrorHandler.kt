@@ -15,9 +15,13 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command
 
+import com.github.kvnxiao.kommandant.command.ExecutionErrorHandler
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.Permissions
+import java.util.EnumSet
 
-@FunctionalInterface
-interface CommandExecutable {
-    fun execute(context: CommandContext, event: MessageReceivedEvent)
+interface CommandErrorHandler : ExecutionErrorHandler {
+    fun onRateLimit(context: CommandContext, event: MessageReceivedEvent)
+    fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permissions>)
+    fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent)
 }

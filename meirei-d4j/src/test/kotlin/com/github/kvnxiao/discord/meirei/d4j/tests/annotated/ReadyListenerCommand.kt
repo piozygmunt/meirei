@@ -15,31 +15,27 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.tests.annotated
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.command.CommandContext
-import sx.blah.discord.api.events.EventSubscriber
+import com.github.kvnxiao.discord.meirei.d4j.command.CommandContext
+import com.github.kvnxiao.discord.meirei.d4j.sendBuffered
+import com.github.kvnxiao.kommandant.command.annotations.Command
+import com.github.kvnxiao.kommandant.command.annotations.GroupId
+import com.github.kvnxiao.kommandant.command.annotations.Prefix
+import sx.blah.discord.api.events.IListener
 import sx.blah.discord.handle.impl.events.ReadyEvent
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 
-@CommandGroup("test.annotated.readylistener")
-class ReadyListenerCommand {
-
-    companion object {
-        const val PREFIX = "%"
-    }
-
-    @EventSubscriber
-    fun onReady(event: ReadyEvent) {
+@GroupId("test.annotated.readylistener")
+@Prefix("%")
+class ReadyListenerCommand : IListener<ReadyEvent> {
+    override fun handle(event: ReadyEvent) {
         println("READY!")
     }
 
     @Command(
         id = "ready",
-        aliases = ["ready"],
-        prefix = PREFIX
+        aliases = ["ready"]
     )
     fun test(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("READY should have been printed to the console")
+        event.channel.sendBuffered("READY should have been printed to the console")
     }
 }

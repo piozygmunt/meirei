@@ -15,11 +15,8 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests;
 
-import com.github.kvnxiao.discord.meirei.Meirei;
-import com.github.kvnxiao.discord.meirei.jda.MeireiJDA;
-import com.github.kvnxiao.discord.meirei.jda.command.CommandBuilder;
+import com.github.kvnxiao.discord.meirei.jda.Meirei;
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.AnnotatedCommand;
-import com.github.kvnxiao.discord.meirei.jda.tests.annotated.NestedAnnotatedCommand;
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.PermissionCommand;
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.ReadyListenerCommand;
 import com.github.kvnxiao.discord.meirei.jda.tests.annotated.RegistryAwareCommand;
@@ -38,18 +35,17 @@ public class MainJava {
                 .setToken(token);
 
         // Add Meirei to discord client
-        final Meirei meirei = new MeireiJDA(builder);
+        final Meirei meirei = new Meirei(builder);
 
-        // Builder-based command
-        meirei.addCommands(new CommandBuilder("test.builder")
-                .aliases("builder")
-                .build((context, event) -> event.getTextChannel().sendMessage("This command was created using a CommandBuilder class.").queue())
-        );
+//        // Builder-based command
+//        meirei.addCommands(new CommandBuilder("test.builder")
+//                .aliases("builder")
+//                .build((context, event) -> event.getTextChannel().sendMessage("This command was created using a CommandBuilder class.").queue())
+//        );
 
         // Build client and log in to discord
         meirei.addAnnotatedCommands(
                 new AnnotatedCommand(),
-                new NestedAnnotatedCommand(),
                 new PermissionCommand(),
                 new RegistryAwareCommand(),
                 new ReadyListenerCommand()

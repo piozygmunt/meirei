@@ -15,46 +15,19 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command
 
-import com.github.kvnxiao.discord.meirei.command.CommandDefaults
-import com.github.kvnxiao.discord.meirei.command.DiscordCommand
-import com.github.kvnxiao.discord.meirei.permission.PermissionData
-import com.github.kvnxiao.discord.meirei.ratelimit.DiscordRateLimiter
-import com.github.kvnxiao.discord.meirei.ratelimit.RateLimitManager
-import com.github.kvnxiao.discord.meirei.utility.GuildId
-import com.github.kvnxiao.discord.meirei.utility.UserId
+import com.github.kvnxiao.discord.meirei.command.DiscordCommandPackage
+import com.github.kvnxiao.discord.meirei.command.permission.PermissionProperties
+import com.github.kvnxiao.discord.meirei.d4j.command.permission.PermissionLevelDefaults
+import com.github.kvnxiao.kommandant.command.CommandProperties
+import com.github.kvnxiao.kommandant.command.ExecutableAction
+import com.github.kvnxiao.kommandant.command.ExecutionErrorHandler
+import sx.blah.discord.handle.obj.Permissions
+import java.util.EnumSet
 
-abstract class CommandD4J(
-    final override val id: String,
-    final override val registryAware: Boolean = CommandDefaults.IS_REGISTRY_AWARE
-) : DiscordCommand(id, registryAware), CommandExecutable {
-
-    private val rateLimitManager: DiscordRateLimiter = RateLimitManager(id)
-
-    fun isNotUserLimited(userId: UserId, permissionData: PermissionData): Boolean {
-        return rateLimitManager.isNotRateLimitedByUser(userId, permissionData)
-    }
-
-    fun isNotRateLimited(guildId: GuildId, userId: UserId, permissionData: PermissionData): Boolean {
-        return rateLimitManager.isNotRateLimited(guildId, userId, permissionData)
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other !is CommandD4J) return false
-
-        if (id != other.id) return false
-        if (registryAware != other.registryAware) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + registryAware.hashCode()
-        return result
-    }
-
-    override fun toString(): String {
-        return "(id='$id', registryAware=$registryAware)"
-    }
-}
+class CommandD4J(executable: ExecutableAction<Any?>,
+                 properties: CommandProperties,
+                 permissions: PermissionProperties,
+                 errorHandler: ExecutionErrorHandler = DefaultErrorHandler(),
+                 permissionLevel: EnumSet<Permissions> = PermissionLevelDefaults.DEFAULT_PERMS_RW,
+                 isRegistryAware: Boolean = false
+) : DiscordCommandPackage<Permissions>(executable, properties, permissions, errorHandler, permissionLevel, isRegistryAware)

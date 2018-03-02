@@ -15,4 +15,35 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command
 
-class DefaultErrorHandler : ErrorHandler
+import com.github.kvnxiao.discord.meirei.d4j.sendBuffered
+import com.github.kvnxiao.kommandant.command.CommandPackage
+import mu.KotlinLogging
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import sx.blah.discord.handle.obj.Permissions
+import java.util.EnumSet
+
+private val LOGGER = KotlinLogging.logger { }
+
+class DefaultErrorHandler : CommandErrorHandler {
+    override fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
+        LOGGER.debug { "Executing command '${context.properties.id}' ignored due to user ${event.author} being rate-limited" }
+        if (context.isDirectMessage) {
+            event.channel.sendBuffered("Slow down, you're trying to execute the '${context.alias}' command too fast here.")
+        } else {
+            event.author.orCreatePMChannel.sendBuffered("Slow down there, you're trying to execute the '${context.alias}' command too fast in **${event.guild.name} : ${event.channel.name}**.")
+        }
+    }
+
+    override fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permissions>) {
+        LOGGER.debug { "${event.author} can't execute command '${context.properties.id}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms" }
+        event.author.orCreatePMChannel.sendBuffered("Sorry, you do not have permission to execute the **${context.alias}** command in **${event.guild.name} : ${event.channel.name}**.")
+    }
+
+    override fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {
+        LOGGER.debug { "Execution of command ${context.properties.id} ignored because the command does not allow direct messages." }
+    }
+
+    override fun onError(command: CommandPackage<*>, ex: Exception) {
+        LOGGER.error(ex) { "Encountered an exception when executing command $command" }
+    }
+}

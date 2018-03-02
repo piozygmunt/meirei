@@ -13,11 +13,15 @@
  *   See the License for the specific language governing permissions and
  *   limitations under the License.
  */
-package com.github.kvnxiao.discord.meirei.d4j.command
+package com.github.kvnxiao.discord.meirei.jda.command
 
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
+import com.github.kvnxiao.kommandant.command.ExecutionErrorHandler
+import net.dv8tion.jda.core.Permission
+import net.dv8tion.jda.core.events.message.MessageReceivedEvent
+import java.util.EnumSet
 
-@FunctionalInterface
-interface CommandExecutable {
-    fun execute(context: CommandContext, event: MessageReceivedEvent)
+interface CommandErrorHandler : ExecutionErrorHandler {
+    fun onRateLimit(context: CommandContext, event: MessageReceivedEvent)
+    fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permission>)
+    fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent)
 }

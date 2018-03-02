@@ -15,43 +15,38 @@
  */
 package com.github.kvnxiao.discord.meirei.jda.tests.annotated
 
-import com.github.kvnxiao.discord.meirei.annotations.Command
-import com.github.kvnxiao.discord.meirei.annotations.CommandGroup
-import com.github.kvnxiao.discord.meirei.annotations.Permissions
-import com.github.kvnxiao.discord.meirei.command.CommandContext
+import com.github.kvnxiao.discord.meirei.command.annotations.Permissions
+import com.github.kvnxiao.discord.meirei.jda.command.CommandContext
+import com.github.kvnxiao.kommandant.command.annotations.Command
+import com.github.kvnxiao.kommandant.command.annotations.GroupId
+import com.github.kvnxiao.kommandant.command.annotations.Prefix
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
-@CommandGroup("test.annotated.permission")
+@GroupId("test.annotated.permission")
 class PermissionCommand {
-
-    companion object {
-        const val PREFIX = "!"
-    }
-
     @Command(
-        id = "alpha",
-        aliases = ["alpha"],
-        prefix = PREFIX
+        id = "owner",
+        aliases = ["owner"]
     )
+    @Prefix("!")
     @Permissions(reqBotOwner = true)
-    fun commandAlpha(context: CommandContext, event: MessageReceivedEvent) {
+    fun commandOwner(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("This is annotated command alpha requiring bot owner privileges. args: ${context.args}").queue()
     }
 
     @Command(
-        id = "beta",
-        aliases = ["beta"],
-        prefix = PREFIX
+        id = "guildOwner",
+        aliases = ["guild"]
     )
+    @Prefix("!")
     @Permissions(reqGuildOwner = true)
-    fun commandBeta(context: CommandContext, event: MessageReceivedEvent) {
+    fun commandGuildOwner(context: CommandContext, event: MessageReceivedEvent) {
         event.channel.sendMessage("This is annotated command beta requiring guild owner privileges. args: ${context.args}").queue()
     }
 
     @Command(
         id = "mention",
-        aliases = ["mention"],
-        prefix = PREFIX
+        aliases = ["mention"]
     )
     @Permissions(reqMention = true)
     fun commandMention(context: CommandContext, event: MessageReceivedEvent) {
