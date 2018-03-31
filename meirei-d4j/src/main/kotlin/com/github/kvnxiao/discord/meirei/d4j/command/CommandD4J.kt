@@ -24,10 +24,12 @@ import com.github.kvnxiao.kommandant.command.ExecutionErrorHandler
 import sx.blah.discord.handle.obj.Permissions
 import java.util.EnumSet
 
-class CommandD4J(executable: ExecutableAction<Any?>,
-                 properties: CommandProperties,
-                 permissions: PermissionProperties,
-                 errorHandler: ExecutionErrorHandler = DefaultErrorHandler(),
-                 permissionLevel: EnumSet<Permissions> = PermissionLevelDefaults.DEFAULT_PERMS_RW,
-                 isRegistryAware: Boolean = false
-) : DiscordCommandPackage<Permissions>(executable, properties, permissions, errorHandler, permissionLevel, isRegistryAware)
+class CommandD4J(
+    executable: ExecutableAction<Any?>,
+    properties: CommandProperties,
+    permissions: PermissionProperties,
+    errorHandler: ExecutionErrorHandler = DefaultErrorHandler(),
+    permissionLevel: EnumSet<Permissions> = PermissionLevelDefaults.DEFAULT_PERMS_RW,
+    isRegistryAware: Boolean = false
+) : DiscordCommandPackage<Permissions>(executable, properties, permissions, errorHandler, permissionLevel,
+    isRegistryAware)

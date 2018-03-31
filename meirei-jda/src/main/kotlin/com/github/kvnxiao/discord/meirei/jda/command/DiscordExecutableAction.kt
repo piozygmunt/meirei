@@ -24,6 +24,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
  * received event.
  */
 interface DiscordExecutableAction<out T> : ExecutableAction<T> {
+
     fun execute(context: CommandContext, event: MessageReceivedEvent): T
 
     override fun execute(context: Context, opt: Array<Any>?): T {

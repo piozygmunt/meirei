@@ -31,7 +31,8 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.EventListener
 import java.util.concurrent.Executors
 
-class Meirei(private val jdaBuilder: JDABuilder, registry: CommandRegistry) : Kommandant(registry, DiscordCommandExecutor(), DiscordCommandParser(), Executors.newScheduledThreadPool(2)) {
+class Meirei(private val jdaBuilder: JDABuilder, registry: CommandRegistry) :
+    Kommandant(registry, DiscordCommandExecutor(), DiscordCommandParser(), Executors.newScheduledThreadPool(2)) {
 
     init {
         // Register message-received event listener
@@ -72,7 +73,8 @@ class Meirei(private val jdaBuilder: JDABuilder, registry: CommandRegistry) : Ko
         val isDirectMessage = opt!![1] as Boolean
         val hasBotMention = opt[2] as Boolean
         val readOnlyRegistry = if (discordCommand.isRegistryAware) this.registry else null
-        return CommandContext(alias, args, discordCommand.properties, discordCommand.permissions, discordCommand.permissionLevel, isDirectMessage, hasBotMention, readOnlyRegistry)
+        return CommandContext(alias, args, discordCommand.properties, discordCommand.permissions,
+            discordCommand.permissionLevel, isDirectMessage, hasBotMention, readOnlyRegistry)
     }
 
     private fun botMentionNextIndex(content: String, id: String): Int {

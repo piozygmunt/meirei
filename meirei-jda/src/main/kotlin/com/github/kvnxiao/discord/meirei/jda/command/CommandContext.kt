@@ -22,15 +22,17 @@ import com.github.kvnxiao.kommandant.command.registry.ReadCommandRegistry
 import net.dv8tion.jda.core.Permission
 import java.util.EnumSet
 
-class CommandContext(alias: String,
-                     args: String?,
-                     properties: CommandProperties,
-                     permissions: PermissionProperties,
-                     permissionLevel: EnumSet<Permission>,
-                     isDirectMessage: Boolean = false,
-                     hasBotMention: Boolean = false,
-                     readOnlyCommandRegistry: ReadCommandRegistry? = null
-) : Context<Permission>(alias, args, properties, permissions, permissionLevel, isDirectMessage, hasBotMention, readOnlyCommandRegistry) {
+class CommandContext(
+    alias: String,
+    args: String?,
+    properties: CommandProperties,
+    permissions: PermissionProperties,
+    permissionLevel: EnumSet<Permission>,
+    isDirectMessage: Boolean = false,
+    hasBotMention: Boolean = false,
+    readOnlyCommandRegistry: ReadCommandRegistry? = null
+) : Context<Permission>(alias, args, properties, permissions, permissionLevel, isDirectMessage, hasBotMention,
+    readOnlyCommandRegistry) {
 
     override fun toString(): String {
         return "CommandContext(alias=$alias, args=$args, properties=$properties, permissions=$permissions, permissionLevel=$permissionLevel, isDirectMessage=$isDirectMessage, hasBotMention=$hasBotMention)"

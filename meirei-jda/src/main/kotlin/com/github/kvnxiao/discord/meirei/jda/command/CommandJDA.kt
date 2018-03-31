@@ -24,10 +24,12 @@ import com.github.kvnxiao.kommandant.command.ExecutionErrorHandler
 import net.dv8tion.jda.core.Permission
 import java.util.EnumSet
 
-class CommandJDA(executable: ExecutableAction<Any?>,
-                 properties: CommandProperties,
-                 permissions: PermissionProperties,
-                 errorHandler: ExecutionErrorHandler = DefaultErrorHandler(),
-                 permissionLevel: EnumSet<Permission> = PermissionLevelDefaults.DEFAULT_PERMS_RW,
-                 isRegistryAware: Boolean = false
-) : DiscordCommandPackage<Permission>(executable, properties, permissions, errorHandler, permissionLevel, isRegistryAware)
+class CommandJDA(
+    executable: ExecutableAction<Any?>,
+    properties: CommandProperties,
+    permissions: PermissionProperties,
+    errorHandler: ExecutionErrorHandler = DefaultErrorHandler(),
+    permissionLevel: EnumSet<Permission> = PermissionLevelDefaults.DEFAULT_PERMS_RW,
+    isRegistryAware: Boolean = false
+) : DiscordCommandPackage<Permission>(executable, properties, permissions, errorHandler, permissionLevel,
+    isRegistryAware)

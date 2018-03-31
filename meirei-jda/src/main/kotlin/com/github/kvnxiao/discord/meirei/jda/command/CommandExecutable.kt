@@ -19,5 +19,6 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 @FunctionalInterface
 interface CommandExecutable {
+
     fun execute(context: CommandContext, event: MessageReceivedEvent)
 }

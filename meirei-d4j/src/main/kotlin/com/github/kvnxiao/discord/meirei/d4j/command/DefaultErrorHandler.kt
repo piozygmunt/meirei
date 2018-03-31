@@ -28,15 +28,22 @@ class DefaultErrorHandler : CommandErrorHandler {
     override fun onRateLimit(context: CommandContext, event: MessageReceivedEvent) {
         LOGGER.debug { "Executing command '${context.properties.id}' ignored due to user ${event.author} being rate-limited" }
         if (context.isDirectMessage) {
-            event.channel.sendBuffered("Slow down, you're trying to execute the '${context.alias}' command too fast here.")
+            event.channel.sendBuffered(
+                "Slow down, you're trying to execute the '${context.alias}' command too fast here.")
         } else {
-            event.author.orCreatePMChannel.sendBuffered("Slow down there, you're trying to execute the '${context.alias}' command too fast in **${event.guild.name} : ${event.channel.name}**.")
+            event.author.orCreatePMChannel.sendBuffered(
+                "Slow down there, you're trying to execute the '${context.alias}' command too fast in **${event.guild.name} : ${event.channel.name}**.")
         }
     }
 
-    override fun onMissingPermissions(context: CommandContext, event: MessageReceivedEvent, requiredPerms: EnumSet<Permissions>) {
+    override fun onMissingPermissions(
+        context: CommandContext,
+        event: MessageReceivedEvent,
+        requiredPerms: EnumSet<Permissions>
+    ) {
         LOGGER.debug { "${event.author} can't execute command '${context.properties.id}' in ${event.guild.name} : ${event.channel.name} due to missing permissions: $requiredPerms" }
-        event.author.orCreatePMChannel.sendBuffered("Sorry, you do not have permission to execute the **${context.alias}** command in **${event.guild.name} : ${event.channel.name}**.")
+        event.author.orCreatePMChannel.sendBuffered(
+            "Sorry, you do not have permission to execute the **${context.alias}** command in **${event.guild.name} : ${event.channel.name}**.")
     }
 
     override fun onDirectMessageInvalid(context: CommandContext, event: MessageReceivedEvent) {

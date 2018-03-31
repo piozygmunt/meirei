@@ -19,5 +19,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 @FunctionalInterface
 interface CommandExecutable {
+
     fun execute(context: CommandContext, event: MessageReceivedEvent)
 }

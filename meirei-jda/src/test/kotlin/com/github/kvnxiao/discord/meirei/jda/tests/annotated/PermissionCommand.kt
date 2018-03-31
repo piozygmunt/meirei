@@ -24,6 +24,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 @GroupId("test.annotated.permission")
 class PermissionCommand {
+
     @Command(
         id = "owner",
         aliases = ["owner"]
@@ -31,7 +32,8 @@ class PermissionCommand {
     @Prefix("!")
     @Permissions(reqBotOwner = true)
     fun commandOwner(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command alpha requiring bot owner privileges. args: ${context.args}").queue()
+        event.channel.sendMessage(
+            "This is annotated command alpha requiring bot owner privileges. args: ${context.args}").queue()
     }
 
     @Command(
@@ -41,7 +43,8 @@ class PermissionCommand {
     @Prefix("!")
     @Permissions(reqGuildOwner = true)
     fun commandGuildOwner(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is annotated command beta requiring guild owner privileges. args: ${context.args}").queue()
+        event.channel.sendMessage(
+            "This is annotated command beta requiring guild owner privileges. args: ${context.args}").queue()
     }
 
     @Command(
@@ -50,6 +53,7 @@ class PermissionCommand {
     )
     @Permissions(reqMention = true)
     fun commandMention(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is an annotated command that requires a mention to activate. args: ${context.args}").queue()
+        event.channel.sendMessage(
+            "This is an annotated command that requires a mention to activate. args: ${context.args}").queue()
     }
 }

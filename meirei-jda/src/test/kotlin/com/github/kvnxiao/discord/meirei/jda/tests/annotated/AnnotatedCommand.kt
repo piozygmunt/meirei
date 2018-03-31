@@ -24,6 +24,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 @GroupId("test.annotated.normal")
 @Prefix("@")
 class AnnotatedCommand {
+
     @Command(
         id = "annotated",
         aliases = ["annotated", "ann"]

@@ -23,12 +23,15 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 @Prefix("/")
 class RegistryAwareCommand {
+
     @Command(
         id = "registry",
         aliases = ["registry"]
     )
     @RegistryAware
     fun registryCommand(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendMessage("This is a registry aware command. all command ids from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.properties.id }}").queue()
+        event.channel.sendMessage(
+            "This is a registry aware command. all command ids from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.properties.id }}")
+            .queue()
     }
 }

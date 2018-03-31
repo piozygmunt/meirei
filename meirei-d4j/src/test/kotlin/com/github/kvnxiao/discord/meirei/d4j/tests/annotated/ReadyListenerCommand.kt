@@ -27,6 +27,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 @GroupId("test.annotated.readylistener")
 @Prefix("%")
 class ReadyListenerCommand : IListener<ReadyEvent> {
+
     override fun handle(event: ReadyEvent) {
         println("READY!")
     }

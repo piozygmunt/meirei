@@ -24,12 +24,14 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 @Prefix("/")
 class RegistryAwareCommand {
+
     @Command(
         id = "registry",
         aliases = ["registry"]
     )
     @RegistryAware
     fun registryCommand(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendBuffered("This is a registry aware command. all command ids from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.properties.id }}")
+        event.channel.sendBuffered(
+            "This is a registry aware command. all command ids from registry: ${context.readOnlyCommandRegistry?.getAllCommands()?.joinToString { it.properties.id }}")
     }
 }

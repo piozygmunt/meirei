@@ -25,6 +25,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 @GroupId("test.annotated.normal")
 @Prefix("@")
 class AnnotatedCommand {
+
     @Command(
         id = "annotated",
         aliases = ["annotated", "ann"]

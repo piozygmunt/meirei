@@ -25,6 +25,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 @GroupId("test.annotated.permission")
 class PermissionCommand {
+
     @Command(
         id = "owner",
         aliases = ["owner"]
@@ -32,7 +33,8 @@ class PermissionCommand {
     @Prefix("!")
     @Permissions(reqBotOwner = true)
     fun commandOwner(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendBuffered("This is annotated command alpha requiring bot owner privileges. args: ${context.args}")
+        event.channel.sendBuffered(
+            "This is annotated command alpha requiring bot owner privileges. args: ${context.args}")
     }
 
     @Command(
@@ -42,7 +44,8 @@ class PermissionCommand {
     @Prefix("!")
     @Permissions(reqGuildOwner = true)
     fun commandGuildOwner(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendBuffered("This is annotated command beta requiring guild owner privileges. args: ${context.args}")
+        event.channel.sendBuffered(
+            "This is annotated command beta requiring guild owner privileges. args: ${context.args}")
     }
 
     @Command(
@@ -51,6 +54,7 @@ class PermissionCommand {
     )
     @Permissions(reqMention = true)
     fun commandMention(context: CommandContext, event: MessageReceivedEvent) {
-        event.channel.sendBuffered("This is an annotated command that requires a mention to activate. args: ${context.args}")
+        event.channel.sendBuffered(
+            "This is an annotated command that requires a mention to activate. args: ${context.args}")
     }
 }

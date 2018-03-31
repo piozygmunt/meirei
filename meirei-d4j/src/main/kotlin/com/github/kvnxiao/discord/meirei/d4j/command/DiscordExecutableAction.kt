@@ -24,6 +24,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
  * received event.
  */
 interface DiscordExecutableAction<out T> : ExecutableAction<T> {
+
     fun execute(context: CommandContext, event: MessageReceivedEvent): T
 
     override fun execute(context: Context, opt: Array<Any>?): T {

@@ -7,18 +7,3 @@ dependencies {
     compileOnly "com.github.austinv11:Discord4J:$d4j_version"
     testCompileOnly "com.github.austinv11:Discord4J:$d4j_version"
 }
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-}

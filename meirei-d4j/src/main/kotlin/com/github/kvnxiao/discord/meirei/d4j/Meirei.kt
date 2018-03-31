@@ -35,7 +35,9 @@ import sx.blah.discord.util.RateLimitException
 import sx.blah.discord.util.RequestBuffer
 import java.util.concurrent.Executors
 
-class Meirei(private val client: IDiscordClient, registry: CommandRegistry) : Kommandant(registry, DiscordCommandExecutor(), DiscordCommandParser(), Executors.newScheduledThreadPool(2)) {
+class Meirei(private val client: IDiscordClient, registry: CommandRegistry) :
+    Kommandant(registry, DiscordCommandExecutor(), DiscordCommandParser(), Executors.newScheduledThreadPool(2)) {
+
     init {
         // Register message-received event listener
         client.dispatcher.registerListener(IListener { event: MessageReceivedEvent ->
@@ -50,8 +52,8 @@ class Meirei(private val client: IDiscordClient, registry: CommandRegistry) : Ko
         val success = super.addAnnotatedCommands(*instances)
         if (success) {
             instances.filter {
-                it is IListener<*>
-                    || it::class.java.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) }
+                it is IListener<*> ||
+                it::class.java.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) }
             }.forEach {
                 client.dispatcher.registerListener(it)
             }
@@ -76,7 +78,8 @@ class Meirei(private val client: IDiscordClient, registry: CommandRegistry) : Ko
         val isDirectMessage = opt!![1] as Boolean
         val hasBotMention = opt[2] as Boolean
         val readOnlyRegistry = if (discordCommand.isRegistryAware) this.registry else null
-        return CommandContext(alias, args, discordCommand.properties, discordCommand.permissions, discordCommand.permissionLevel, isDirectMessage, hasBotMention, readOnlyRegistry)
+        return CommandContext(alias, args, discordCommand.properties, discordCommand.permissions,
+            discordCommand.permissionLevel, isDirectMessage, hasBotMention, readOnlyRegistry)
     }
 
     private fun botMentionNextIndex(content: String, id: String): Int {

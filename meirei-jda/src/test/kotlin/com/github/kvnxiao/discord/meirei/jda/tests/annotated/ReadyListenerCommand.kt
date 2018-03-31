@@ -26,6 +26,7 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 @GroupId("test.annotated.readylistener")
 @Prefix("%")
 class ReadyListenerCommand : ListenerAdapter() {
+
     override fun onReady(event: ReadyEvent) {
         println("READY!")
     }

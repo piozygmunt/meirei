@@ -32,7 +32,13 @@ import java.util.EnumSet
 
 class DiscordCommandParser : AnnotationParser() {
 
-    override fun createCommand(method: Method, commandAnn: Command, id: String, globalPrefix: String?, instance: Any): CommandPackage<*> {
+    override fun createCommand(
+        method: Method,
+        commandAnn: Command,
+        id: String,
+        globalPrefix: String?,
+        instance: Any
+    ): CommandPackage<*> {
         return DiscordCommandPackage(
             this.createExecutable(method, instance),
             this.createProperties(method, id, globalPrefix, commandAnn),

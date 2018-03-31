@@ -46,13 +46,15 @@ fun main(args: Array<String>) {
             event.channel.sendMessage("This is a command created using constructors.").queue()
         }
     }, CommandProperties("test.constructor", aliases = setOf("constructor", "c"), prefix = "!"),
-        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW, false)
+        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW,
+        false)
     val subCommand = CommandJDA(object : DiscordExecutableAction<Unit> {
         override fun execute(context: CommandContext, event: MessageReceivedEvent) {
             event.channel.sendMessage("This is a sub-command created using constructors.").queue()
         }
     }, CommandProperties("test.constructor.child", aliases = setOf("sub", "s"), parentId = "test.constructor"),
-        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW, false)
+        PermissionProperties(), DefaultErrorHandler(), PermissionLevelDefaults.DEFAULT_PERMS_RW,
+        false)
 
     meirei.addCommand(command)
     meirei.addSubCommand(subCommand, command.properties.id)

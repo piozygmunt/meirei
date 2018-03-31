@@ -27,6 +27,7 @@ open class PermissionProperties(
     val reqBotOwner: Boolean = PermissionDefaults.REQUIRE_BOT_OWNER,
     val requireMention: Boolean = PermissionDefaults.REQUIRE_MENTION
 ) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is PermissionProperties) return false

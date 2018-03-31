@@ -35,7 +35,8 @@ private val LOGGER = KotlinLogging.logger { }
 class DiscordCommandExecutor : CommandExecutor {
 
     companion object {
-        val mentionValidationError = PermissionValidationError("Attempt to call mention-only command without a mention was ignored.")
+        val mentionValidationError = PermissionValidationError(
+            "Attempt to call mention-only command without a mention was ignored.")
     }
 
     private var botOwnerId: Long = 0L
@@ -54,13 +55,15 @@ class DiscordCommandExecutor : CommandExecutor {
         // Validate permissions
         if (!validatePermissions(commandContext, event, errorHandler)) {
             return Either.left(
-                PermissionValidationError("Permission validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
+                PermissionValidationError(
+                    "Permission validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
             )
         }
         // Validate rate-limits
         if (!validateRateLimits(discordCommand, context, event, errorHandler)) {
             return Either.left(
-                PermissionValidationError("Rate-limit validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
+                PermissionValidationError(
+                    "Rate-limit validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
             )
         }
 
@@ -89,7 +92,12 @@ class DiscordCommandExecutor : CommandExecutor {
     /**
      * Validate for rate-limits
      */
-    private fun validateRateLimits(command: DiscordCommandPackage<Permissions>, context: CommandContext, event: MessageReceivedEvent, errorHandler: CommandErrorHandler): Boolean {
+    private fun validateRateLimits(
+        command: DiscordCommandPackage<Permissions>,
+        context: CommandContext,
+        event: MessageReceivedEvent,
+        errorHandler: CommandErrorHandler
+    ): Boolean {
         val success = if (context.isDirectMessage) command.isNotUserLimited(event.author.longID, context.permissions)
         else command.isNotRateLimited(event.guild.longID, event.author.longID, context.permissions)
         if (!success) {
@@ -101,12 +109,18 @@ class DiscordCommandExecutor : CommandExecutor {
     /**
      * Validate for mention-only settings
      */
-    private fun validateMentionOnly(context: CommandContext): Boolean = context.permissions.requireMention == context.hasBotMention
+    private fun validateMentionOnly(
+        context: CommandContext
+    ): Boolean = context.permissions.requireMention == context.hasBotMention
 
     /**
      * Validate that the user has the necessary permissions to call the command
      */
-    private fun validatePermissions(context: CommandContext, event: MessageReceivedEvent, errorHandler: CommandErrorHandler): Boolean {
+    private fun validatePermissions(
+        context: CommandContext,
+        event: MessageReceivedEvent,
+        errorHandler: CommandErrorHandler
+    ): Boolean {
         val permissions = context.permissions
         val permissionLevel = context.permissionLevel
 

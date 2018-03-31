@@ -1,24 +1,9 @@
 buildscript {
-    ext.jda_version = '3.5.1_351'
+    ext.jda_version = '3.6.0_354'
 }
 
 dependencies {
     implementation project(":meirei-core")
     compileOnly "net.dv8tion:JDA:$jda_version"
     testCompileOnly "net.dv8tion:JDA:$jda_version"
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives sourcesJar
-    archives javadocJar
 }

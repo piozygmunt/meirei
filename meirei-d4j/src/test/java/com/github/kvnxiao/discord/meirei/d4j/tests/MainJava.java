@@ -31,27 +31,24 @@ public class MainJava {
             throw new IllegalArgumentException("TEST_BOT_TOKEN environment variable is missing!");
         }
 
-        final IDiscordClient client = new ClientBuilder()
-                .withToken(token)
-                .build();
+        final IDiscordClient client = new ClientBuilder().withToken(token).build();
 
         // Add Meirei to discord client
         final Meirei meirei = new Meirei(client);
 
-//        // Builder-based command
-//        meirei.addCommands(new CommandBuilder("test.builder")
-//                .aliases("builder")
-//                .build((context, event) -> sendBuffered(event.getChannel(), "This command was created using a CommandBuilder class."))
-//        );
+        //        // Builder-based command
+        //        meirei.addCommands(new CommandBuilder("test.builder")
+        //                .aliases("builder")
+        //                .build((context, event) -> sendBuffered(event.getChannel(), "This command
+        // was created using a CommandBuilder class."))
+        //        );
         meirei.addAnnotatedCommands(
                 new AnnotatedCommand(),
                 new PermissionCommand(),
                 new RegistryAwareCommand(),
-                new ReadyListenerCommand()
-        );
+                new ReadyListenerCommand());
 
         // Log in to discord
         client.login();
     }
-
 }
