@@ -63,14 +63,12 @@ class RateLimitManager(
         perms: PermissionProperties,
         isGuildLevel: Boolean
     ): Bucket {
-        val bucket = this.get(id, { nullBucket(it, isGuildLevel) })
+        val bucket = this.get(id) { nullBucket(it, isGuildLevel) }
         return if (bucket != null) {
             bucket
         } else {
-            val newBucket = Bucket4j.builder().addLimit(perms.tokensPerPeriod, Bandwidth.simple(perms.tokensPerPeriod,
-                java.time.Duration.ofMillis(
-                    perms.rateLimitPeriodInMs)))
-                .build()
+            val newBucket = Bucket4j.builder().addLimit(
+                Bandwidth.simple(perms.tokensPerPeriod, java.time.Duration.ofMillis(perms.rateLimitPeriodInMs))).build()
             this.put(id, newBucket)
             newBucket
         }

@@ -51,7 +51,7 @@ public class MainJava {
                 new ReadyListenerCommand());
 
         try {
-            builder.buildAsync();
+            builder.build();
         } catch (Exception ignored) {
 
         }

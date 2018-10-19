@@ -51,9 +51,9 @@ class Meirei(private val client: IDiscordClient, registry: CommandRegistry) :
     override fun addAnnotatedCommands(vararg instances: Any): Boolean {
         val success = super.addAnnotatedCommands(*instances)
         if (success) {
-            instances.filter {
-                it is IListener<*> ||
-                it::class.java.methods.any { it.isAnnotationPresent(EventSubscriber::class.java) }
+            instances.filter { inst ->
+                inst is IListener<*> ||
+                inst::class.java.methods.any { method -> method.isAnnotationPresent(EventSubscriber::class.java) }
             }.forEach {
                 client.dispatcher.registerListener(it)
             }

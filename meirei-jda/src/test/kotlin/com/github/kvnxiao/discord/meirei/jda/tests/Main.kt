@@ -33,7 +33,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 fun main(args: Array<String>) {
     val token = System.getenv("TEST_BOT_TOKEN")
-    requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
+    requireNotNull(token) { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." }
     val builder = JDABuilder(AccountType.BOT)
         .setToken(token)
 
@@ -74,5 +74,5 @@ fun main(args: Array<String>) {
     )
 
     // Build client and log in to discord
-    builder.buildAsync()
+    builder.build()
 }

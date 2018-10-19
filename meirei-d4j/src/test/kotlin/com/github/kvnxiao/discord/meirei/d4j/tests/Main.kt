@@ -33,7 +33,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 
 fun main(args: Array<String>) {
     val token = System.getenv("TEST_BOT_TOKEN")
-    requireNotNull(token, { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." })
+    requireNotNull(token) { "The environment variable 'TEST_BOT_TOKEN' must be set for logging in." }
     val client = ClientBuilder()
         .withToken(token).build()
 

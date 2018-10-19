@@ -43,7 +43,7 @@ class DiscordCommandParser : AnnotationParser() {
             this.createExecutable(method, instance),
             this.createProperties(method, id, globalPrefix, commandAnn),
             this.createPermissionProperties(method, method.getPermissions()),
-            this.createErrorHandler(method, instance, { DefaultErrorHandler() }),
+            this.createErrorHandler(method, instance) { DefaultErrorHandler() },
             this.createPermissionLevels(method),
             method.isRegistryAware()
         )

@@ -15,14 +15,15 @@
  */
 package com.github.kvnxiao.discord.meirei.d4j.command.executor
 
-import arrow.core.Either
 import com.github.kvnxiao.discord.meirei.command.DiscordCommandPackage
 import com.github.kvnxiao.discord.meirei.command.errors.PermissionValidationError
 import com.github.kvnxiao.discord.meirei.d4j.command.CommandContext
 import com.github.kvnxiao.discord.meirei.d4j.command.CommandErrorHandler
 import com.github.kvnxiao.kommandant.command.CommandPackage
+import com.github.kvnxiao.kommandant.command.CommandResult
 import com.github.kvnxiao.kommandant.command.Context
 import com.github.kvnxiao.kommandant.command.executor.CommandExecutor
+import com.github.kvnxiao.kommandant.command.tryExecute
 import mu.KotlinLogging
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent
 import sx.blah.discord.handle.obj.Permissions
@@ -42,7 +43,7 @@ class DiscordCommandExecutor : CommandExecutor {
     private var botOwnerId: Long = 0L
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> execute(command: CommandPackage<*>, context: Context, opt: Array<Any>?): Either<Exception, T> {
+    override fun <T> execute(command: CommandPackage<*>, context: Context, opt: Array<Any>?): CommandResult<T> {
         val discordCommand = command as DiscordCommandPackage<Permissions>
         val commandContext = context as CommandContext
         val event = opt!![0] as MessageReceivedEvent
@@ -50,18 +51,18 @@ class DiscordCommandExecutor : CommandExecutor {
 
         // Validate mention-only command
         if (!validateMentionOnly(commandContext)) {
-            return Either.left(mentionValidationError)
+            return CommandResult.Error(mentionValidationError)
         }
         // Validate permissions
         if (!validatePermissions(commandContext, event, errorHandler)) {
-            return Either.left(
+            return CommandResult.Error(
                 PermissionValidationError(
                     "Permission validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
             )
         }
         // Validate rate-limits
         if (!validateRateLimits(discordCommand, context, event, errorHandler)) {
-            return Either.left(
+            return CommandResult.Error(
                 PermissionValidationError(
                     "Rate-limit validation failed for user ${event.author} in attempt to execute command ${command.properties.id}")
             )
@@ -78,15 +79,13 @@ class DiscordCommandExecutor : CommandExecutor {
             }
         }
 
-        return try {
+        return tryExecute({
             LOGGER.debug { "Executing command $command with args: \"${commandContext.args}\", requested by user ${event.author} ${if (commandContext.isDirectMessage) "(in a private message)." else "in guild ${event.guild}."}" }
-            val response = command.executable.execute(context, opt)
-            Either.right(response as T)
-        } catch (ex: Exception) {
+            command.executable.execute(context, opt) as T
+        }, {
             LOGGER.error { "Encountered an exception when executing $command with args: \"${commandContext.args}\", requested by user ${event.author} ${if (commandContext.isDirectMessage) "(in a private message)." else "in guild ${event.guild}."}" }
-            errorHandler.onError(command, ex)
-            Either.left(ex)
-        }
+            errorHandler.onError(command, it)
+        })
     }
 
     /**
