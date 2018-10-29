@@ -93,7 +93,11 @@ class MeireiD4J(client: IDiscordClient, registry: CommandRegistry) : Meirei(comm
     }
 
     private fun process(input: String, event: MessageReceivedEvent, isDirectMsg: Boolean, hasBotMention: Boolean) {
-        val (alias, args) = splitString(input)
+        var (alias, args) = splitString(input)
+
+        if (aliasesToLower) {
+            alias = alias.toLowerCase()
+        }
 
         alias.let {
             val command = registry.getCommandByAlias(it) as CommandD4J?

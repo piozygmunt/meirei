@@ -24,7 +24,8 @@ import mu.KotlinLogging
 
 abstract class Meirei(
     protected val registry: CommandRegistry = CommandRegistryImpl(),
-    protected val commandParser: AnnotationParser
+    protected val commandParser: AnnotationParser,
+    protected var aliasesToLower: Boolean = false
 ) {
 
     companion object {
